@@ -1,6 +1,6 @@
 # Carpetas de proyecto
 build/
-binary/
+binary/proyecto_final
 
 # CMake por diferencias en windows y linux
 CMakeLists.txt
