@@ -1,0 +1,10 @@
+# Carpetas de proyecto
+build/
+binary/
+
+# CMake por diferencias en windows y linux
+CMakeLists.txt
+
+# Carpeta de vscode
+.vscode/
+
