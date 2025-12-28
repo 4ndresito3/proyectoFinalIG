@@ -23,3 +23,7 @@ cd build
 cmake ..
 make [-j($nproc)]
 ```
+
+## 3. En el CMakeLists.txt
+
+Meter como PROJECT_NAME proyecto_final para que sea ignorado para el github.
