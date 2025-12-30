@@ -10,7 +10,7 @@ void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
 void drawMatrix(glm::mat4 P, glm::mat4 V);
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
-void drawMago(glm::mat4 P, glm::mat4 V);
+void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model &model, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 
@@ -330,9 +330,9 @@ void renderScene() {
 
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
   drawBook(P, V, Tfin, true);
+  glm::mat4 Mago = glm::translate(I, glm::vec3(0.0, 0.0, 0.0));
+  drawMago (P, V, Mago);
 
-  drawMago (P, V);
-  
   /*
   
   
@@ -496,32 +496,32 @@ void funTimer(double seconds, double &t0) {
   }
 }
 
-void drawMago(glm::mat4 P, glm::mat4 V){
+void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   glm::mat4 sMago = glm::scale    (I, glm::vec3(1.1, 0.75, 1));
   glm::mat4 tMago = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
-  glm::mat4 M = tMago * sMago;
-  drawObjectMat(cone, gold, P, V, M);
+  glm::mat4 M1 = tMago * sMago;
+  drawObjectMat(cone, gold, P, V, M * M1);
   glm::mat4 sBrazos = glm::scale    (I, glm::vec3(0.3, 0.4, 0.3));
   glm::mat4 rotBrazo1 = glm::rotate   (I, glm::radians(30.0f), glm::vec3(0,0,1));
   glm::mat4 transBrazo1 = glm::translate(I, glm::vec3(0.95, -2.0, 0.0));
-  M = transBrazo1 * rotBrazo1 * sBrazos;
-  drawObjectMat(cone, gold, P, V, M);
+  M1 = transBrazo1 * rotBrazo1 * sBrazos;
+  drawObjectMat(cone, gold, P, V, M * M1);
   glm::mat4 rotBrazo2 = glm::rotate   (I, glm::radians(-30.0f), glm::vec3(0,0,1));
   glm::mat4 transBrazo2 = glm::translate(I, glm::vec3(-0.95, -2.0, 0.0));
-  M = transBrazo2 * rotBrazo2 * sBrazos;
-  drawObjectMat(cone, gold, P, V, M);
+  M1 = transBrazo2 * rotBrazo2 * sBrazos;
+  drawObjectMat(cone, gold, P, V, M * M1);
   glm::mat4 sCabeza = glm::scale    (I, glm::vec3(0.45, 0.20, 0.49));
   glm::mat4 tCabeza = glm::translate(I, glm::vec3(0.0, -0.50, 0.2));
   glm::mat4 rCabeza = glm::rotate   (I, glm::radians(-80.0f), glm::vec3(1,0,0));
-  M = tCabeza * rCabeza * sCabeza;
-  drawObjectMat(cone, gold, P, V, M);
+  M1 = tCabeza * rCabeza * sCabeza;
+  drawObjectMat(cone, gold, P, V, M * M1);
   glm::mat4 sCara = glm::scale    (I, glm::vec3(0.15, 0.10, 0.20));
   glm::mat4 tCara = glm::translate(I, glm::vec3(0.0, -0.47, 0.2));
-  M = tCara * rCabeza * sCara;
-  drawObjectMat(sphere, gold, P, V, M);
+  M1 = tCara * rCabeza * sCara;
+  drawObjectMat(sphere, gold, P, V, M * M1);
   glm::mat4 R = glm::rotate   (I, glm::radians(-25.0f), glm::vec3(0,0,1));
   glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
   glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
   glm::mat4 S = glm::scale    (I, glm::vec3(0.1, 0.1, 0.1));
-  drawObjectTex(staff, texStaff, P, V, T * Ry * R  * S);
+  drawObjectTex(staff, texStaff, P, V, M * T * Ry * R  * S);
 }
