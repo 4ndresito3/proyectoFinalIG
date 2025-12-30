@@ -9,3 +9,5 @@ libraries/
 # Carpeta de vscode
 .vscode/
 
+# Archivos miscelaneos
+*.ps1
