@@ -8,6 +8,8 @@
 void configScene();
 void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
+void drawMatrix(glm::mat4 P, glm::mat4 V);
+void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model &model, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 
@@ -15,6 +17,7 @@ void funFramebufferSize(GLFWwindow* window, int width, int height);
 void funKey            (GLFWwindow* window, int key  , int scancode, int action, int mods);
 void funScroll         (GLFWwindow* window, double xoffset, double yoffset);
 void funCursorPos      (GLFWwindow* window, double xpos, double ypos);
+void funTimer          (double seconds, double &t0);
 
 // Shaders
    Shaders shaders;
@@ -24,6 +27,8 @@ void funCursorPos      (GLFWwindow* window, double xpos, double ypos);
    Model plane;
    Model cube;
    Model staff;
+   Model cylinder;
+
 // Imagenes (texturas)
    Texture imgNoEmissive;
    Texture imgRuby;
@@ -66,9 +71,11 @@ void funCursorPos      (GLFWwindow* window, double xpos, double ypos);
    int h = 500;
 
 // Animaciones
-   float rotX = 0.0;
-   float rotY = 0.0;
+   float desX = 0.0;
+   float desY = 0.0;
    float desZ = 0.0;
+   float rotZBook = 0.0;
+   bool  rotZUp = true;
 
 // Movimiento de camara
    float fovy   = 60.0;
@@ -113,10 +120,12 @@ int main() {
 
  // Entramos en el bucle de renderizado
    configScene();
+   double t0 = glfwGetTime();
    while(!glfwWindowShouldClose(window)) {
       renderScene();
       glfwSwapBuffers(window);
       glfwPollEvents();
+      funTimer(0.01,t0);
    }
    glfwDestroyWindow(window);
    glfwTerminate();
@@ -140,6 +149,8 @@ void configScene() {
    sphere.initModel("resources/models/sphere.obj");
    plane.initModel("resources/models/plane.obj");
    cube.initModel("resources/models/cube.obj");
+   cylinder.initModel("resources/models/cylinder.obj");
+   staff.initModel("resources/models/staff.obj");
 
  // Imagenes (texturas)
    imgNoEmissive.initTexture("resources/textures/imgNoEmissive.png");
@@ -255,8 +266,6 @@ void configScene() {
    texWall.normal     = imgWallNormal.getTexture();
    texWall.shininess  = 51.2;
 
-   staff.initModel("resources/models/staff.obj");
-
    // Imagenes (texturas)
    imgStaffDiffuse.initTexture("resources/textures/imgStaffDiffuse.png");
    imgStaffSpecular.initTexture("resources/textures/imgStaffSpecular.png");
@@ -298,16 +307,17 @@ void renderScene() {
  // Fijamos las luces
    setLights(P,V);
 
-//  Dibujamos la escena
+ // Dibujamos la escena
+   drawMatrix(P,V);
+
    glm::mat4 S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0));
    glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
     drawObjectTex(plane, texWall, P, V, T * S);
 
-   glm::mat4 Ry = glm::rotate   (I, glm::radians(rotY), glm::vec3(0,1,0));
-   glm::mat4 Rx = glm::rotate   (I, glm::radians(rotX), glm::vec3(1,0,0));
-   glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, desZ));
-    drawObjectTex(cube, texCube, P, V, Tz * Rx * Ry);
-
+   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
+    drawBook(P, V, Tfin, true);
+   
+  /*
    Ry = glm::rotate   (I, glm::radians(rotY), glm::vec3(0,1,0));
    Rx = glm::rotate   (I, glm::radians(rotX), glm::vec3(1,0,0));
    Tz = glm::translate(I, glm::vec3(0.0, 0.0, desZ));
@@ -321,6 +331,7 @@ void renderScene() {
    glDepthMask(GL_FALSE);
         drawObjectTex(plane, texWindow, P, V, Tv * Rv);
    glDepthMask(GL_TRUE);
+  */
 }
 
 void setLights(glm::mat4 P, glm::mat4 V) {
@@ -340,6 +351,42 @@ void setLights(glm::mat4 P, glm::mat4 V) {
         drawObjectMat(sphere, mluz, P, V, M);
     }
 
+}
+
+void drawMatrix(glm::mat4 P, glm::mat4 V) {
+    glm::mat4 S = glm::scale (I, glm::vec3(0.015, 0.015, 0.015));
+    for(int i = 0; i < 7; i++)
+        for(int j = 0; j < 7; j++)
+            for(int k = 0; k < 7; k++) {
+                glm::mat4 T = glm::translate(I, glm::vec3(i - 3.0f, j - 3.0f, k - 3.0f));
+                drawObjectMat(sphere, gold, P, V, T * S);
+            }
+}
+
+void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
+
+   glm::mat4 Dx = glm::translate(I, glm::vec3(control ? desX : 0.0f, 0.0f, 0.0f)); //Para mover el libro
+   glm::mat4 Dy = glm::translate(I, glm::vec3(0.0f, control ? desY : 0.0f, 0.0f));
+   glm::mat4 Dz = glm::translate(I, glm::vec3(0.0f, 0.0f, control ? desZ : 0.0f));
+
+   glm::mat4 Rz = glm::rotate   (I, glm::radians(rotZBook), glm::vec3(0,0,1));
+   glm::mat4 T1 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f)); //Para rotar en el extremo del libro
+   glm::mat4 T2 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f));
+   glm::mat4 S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
+    drawObjectMat(cube, gold, P, V, Dz * Dy * Dx * M * T2 * Rz * T1 * S);
+
+   Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1));
+   T1 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f)); 
+   T2 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f));
+   glm::mat4 Tx = glm::translate(I, glm::vec3(0.75, 0.0, 0.0));
+   S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
+    drawObjectMat(cube, gold, P, V, Dz * Dy * Dx *M * Tx * T2 * Rz * T1 * S);
+    
+   Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1));
+   glm::mat4 Ry = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,1,0));
+   Tx = glm::translate(I, glm::vec3(0.37, 0.0, 0.0));
+   S = glm::scale(I, glm::vec3(0.2/3, 1.0/3, 0.2/3));
+    drawObjectMat(cylinder, gold, P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
 }
 
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -380,18 +427,22 @@ void funFramebufferSize(GLFWwindow* window, int width, int height) {
 void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
 
    switch(key) {
-      case GLFW_KEY_UP:    rotX -= 5.0f;   break;
-      case GLFW_KEY_DOWN:  rotX += 5.0f;   break;
-      case GLFW_KEY_LEFT:  rotY -= 5.0f;   break;
-      case GLFW_KEY_RIGHT: rotY += 5.0f;   break;
+      case GLFW_KEY_LEFT:  desX -= 0.2f;   break;
+      case GLFW_KEY_RIGHT: desX += 0.2f;   break;
+      case GLFW_KEY_DOWN:  desY -= 0.2f;   break;
+      case GLFW_KEY_UP:    desY += 0.2f;   break;
       case GLFW_KEY_Z:
-            if(mods==GLFW_MOD_SHIFT) desZ -= desZ > -24.0f ? 0.1f : 0.0f;
-            else                     desZ += desZ <   5.0f ? 0.1f : 0.0f;
-            break;
-      default:
-            rotX = 0.0f;
-            rotY = 0.0f;
-            break;
+        if (mods == GLFW_MOD_SHIFT)
+            desZ -= 0.2f;   // Shift + Z
+        else
+            desZ += 0.2f;   // z
+        break;
+      default: 
+        desX = 0.0f;
+        desY = 0.0f;
+        desZ = 0.0f; 
+        break;
+            
    }
 
 }
@@ -414,3 +465,25 @@ void funCursorPos(GLFWwindow* window, double xpos, double ypos) {
    if(alphaY> limY) alphaY =  limY;
 
 }
+
+void funTimer(double seconds, double &t0) { 
+    double t1 = glfwGetTime();
+    bool up = true;
+    if(t1-t0 > seconds) {
+        if(rotZUp) {
+            rotZBook -= 5.0f;
+            if(rotZBook <= -90.0f) {
+                rotZBook = -90.0f;
+                rotZUp = false;
+            }
+        } else {
+            rotZBook += 5.0f;
+            if(rotZBook >= 0.0f) {
+                rotZBook = 0.0f;
+                rotZUp = true;
+            }
+        }
+        t0 = t1;
+    }
+}
+
