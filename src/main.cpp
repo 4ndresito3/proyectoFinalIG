@@ -310,9 +310,20 @@ void renderScene() {
  // Dibujamos la escena
   drawMatrix(P,V);
 
-  glm::mat4 S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0));
+  glm::mat4 S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
   drawObjectTex(plane, texWall, P, V, T * S);
+  S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0));
+
+  glm::mat4 Rx = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0)); //fondo de atras
+  glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
+  glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -4.0));
+  drawObjectTex(plane, texWall, P, V, Tz * Ty * Rx * S);
+
+  glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado
+  Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
+  glm::mat4 Tx = glm::translate(I, glm::vec3(-4.0, 0.0, 0.0));
+  drawObjectTex(plane, texWall, P, V, Ty * Tx * Rz * S);
 
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
   drawBook(P, V, Tfin, true);
