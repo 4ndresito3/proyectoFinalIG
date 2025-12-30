@@ -329,38 +329,38 @@ void renderScene() {
   glm::mat4 Rv = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0));
   glm::mat4 Tv = glm::translate(I, glm::vec3(0.0, 0.0, 3.0));
   glDepthMask(GL_FALSE);
-        drawObjectTex(plane, texWindow, P, V, Tv * Rv);
+    drawObjectTex(plane, texWindow, P, V, Tv * Rv);
   glDepthMask(GL_TRUE);
   */
 }
 
 void setLights(glm::mat4 P, glm::mat4 V) {
 
-    shaders.setLight("ulightG",lightG);
-    for(int i=0; i<NLD; i++) shaders.setLight("ulightD["+toString(i)+"]",lightD[i]);
-    for(int i=0; i<NLP; i++) shaders.setLight("ulightP["+toString(i)+"]",lightP[i]);
-    for(int i=0; i<NLF; i++) shaders.setLight("ulightF["+toString(i)+"]",lightF[i]);
+  shaders.setLight("ulightG",lightG);
+  for(int i=0; i<NLD; i++) shaders.setLight("ulightD["+toString(i)+"]",lightD[i]);
+  for(int i=0; i<NLP; i++) shaders.setLight("ulightP["+toString(i)+"]",lightP[i]);
+  for(int i=0; i<NLF; i++) shaders.setLight("ulightF["+toString(i)+"]",lightF[i]);
 
-    for(int i=0; i<NLP; i++) {
-        glm::mat4 M = glm::translate(I,lightP[i].position) * glm::scale(I,glm::vec3(0.1));
-        drawObjectMat(sphere, mluz, P, V, M);
-    }
+  for(int i=0; i<NLP; i++) {
+    glm::mat4 M = glm::translate(I,lightP[i].position) * glm::scale(I,glm::vec3(0.1));
+    drawObjectMat(sphere, mluz, P, V, M);
+  }
 
-    for(int i=0; i<NLF; i++) {
-        glm::mat4 M = glm::translate(I,lightF[i].position) * glm::scale(I,glm::vec3(0.025));
-        drawObjectMat(sphere, mluz, P, V, M);
-    }
+  for(int i=0; i<NLF; i++) {
+    glm::mat4 M = glm::translate(I,lightF[i].position) * glm::scale(I,glm::vec3(0.025));
+    drawObjectMat(sphere, mluz, P, V, M);
+  }
 
 }
 
 void drawMatrix(glm::mat4 P, glm::mat4 V) {
-    glm::mat4 S = glm::scale (I, glm::vec3(0.015, 0.015, 0.015));
-    for(int i = 0; i < 7; i++)
-        for(int j = 0; j < 7; j++)
-            for(int k = 0; k < 7; k++) {
-                glm::mat4 T = glm::translate(I, glm::vec3(i - 3.0f, j - 3.0f, k - 3.0f));
-                drawObjectMat(sphere, gold, P, V, T * S);
-            }
+  glm::mat4 S = glm::scale (I, glm::vec3(0.015, 0.015, 0.015));
+  for(int i = 0; i < 7; i++)
+    for(int j = 0; j < 7; j++)
+      for(int k = 0; k < 7; k++) {
+        glm::mat4 T = glm::translate(I, glm::vec3(i - 3.0f, j - 3.0f, k - 3.0f));
+        drawObjectMat(sphere, gold, P, V, T * S);
+      }
 }
 
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
@@ -391,12 +391,12 @@ void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
 
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
-    shaders.setMat4("uN"  ,glm::transpose(glm::inverse(M)));
-    shaders.setMat4("uM"  ,M);
-    shaders.setMat4("uPVM",P*V*M);
-    shaders.setBool("uWithMaterials",true);
-    shaders.setMaterial("umaterial",material);
-    model.renderModel(GL_FILL);
+  shaders.setMat4("uN"  ,glm::transpose(glm::inverse(M)));
+  shaders.setMat4("uM"  ,M);
+  shaders.setMat4("uPVM",P*V*M);
+  shaders.setBool("uWithMaterials",true);
+  shaders.setMaterial("umaterial",material);
+  model.renderModel(GL_FILL);
 
 }
 
@@ -425,7 +425,7 @@ void funFramebufferSize(GLFWwindow* window, int width, int height) {
 }
 
 void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
-
+  if (action == GLFW_RELEASE) return;
   switch(key) {
     case GLFW_KEY_LEFT:  desX -= 0.2f;   break;
     case GLFW_KEY_RIGHT: desX += 0.2f;   break;
@@ -433,16 +433,15 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
     case GLFW_KEY_UP:    desY += 0.2f;   break;
     case GLFW_KEY_Z:
       if (mods == GLFW_MOD_SHIFT)
-          desZ -= 0.2f;   // Shift + Z
+        desZ -= 0.2f;   // Shift + Z
       else
-          desZ += 0.2f;   // z
+        desZ += 0.2f;   // z
       break;
-    default: 
+    case GLFW_KEY_R:
       desX = 0.0f;
       desY = 0.0f;
-      desZ = 0.0f; 
+      desZ = 0.0f;
       break;
-          
   }
 
 }
@@ -467,23 +466,23 @@ void funCursorPos(GLFWwindow* window, double xpos, double ypos) {
 }
 
 void funTimer(double seconds, double &t0) { 
-    double t1 = glfwGetTime();
-    bool up = true;
-    if(t1-t0 > seconds) {
-        if(rotZUp) {
-            rotZBook -= 5.0f;
-            if(rotZBook <= -90.0f) {
-                rotZBook = -90.0f;
-                rotZUp = false;
-            }
-        } else {
-            rotZBook += 5.0f;
-            if(rotZBook >= 0.0f) {
-                rotZBook = 0.0f;
-                rotZUp = true;
-            }
+  double t1 = glfwGetTime();
+  bool up = true;
+  if(t1-t0 > seconds) {
+    if(rotZUp) {
+        rotZBook -= 5.0f;
+        if(rotZBook <= -90.0f) {
+          rotZBook = -90.0f;
+          rotZUp = false;
         }
-        t0 = t1;
+    } else {
+      rotZBook += 5.0f;
+      if(rotZBook >= 0.0f) {
+        rotZBook = 0.0f;
+        rotZUp = true;
+      }
     }
+    t0 = t1;
+  }
 }
 
