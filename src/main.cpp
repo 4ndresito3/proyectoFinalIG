@@ -10,6 +10,7 @@ void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
 void drawMatrix(glm::mat4 P, glm::mat4 V);
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
+void drawMago(glm::mat4 P, glm::mat4 V);
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model &model, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 
@@ -28,6 +29,7 @@ void funTimer          (double seconds, double &t0);
   Model cube;
   Model staff;
   Model cylinder;
+  Model cone;
 
 // Imagenes (texturas)
   Texture imgNoEmissive;
@@ -151,6 +153,7 @@ void configScene() {
   cube.initModel("resources/models/cube.obj");
   cylinder.initModel("resources/models/cylinder.obj");
   staff.initModel("resources/models/staff.obj");
+  cone.initModel("resources/models/cone.obj");
 
 // Imagenes (texturas)
   imgNoEmissive.initTexture("resources/textures/imgNoEmissive.png");
@@ -212,10 +215,10 @@ void configScene() {
   mluz.emissive  = glm::vec4(1.0, 1.0, 1.0, 1.0);
   mluz.shininess = 1.0;
 
-  ruby.ambient   = glm::vec4(0.174500, 0.011750, 0.011750, 0.55);
-  ruby.diffuse   = glm::vec4(0.614240, 0.041360, 0.041360, 0.55);
-  ruby.specular  = glm::vec4(0.727811, 0.626959, 0.626959, 0.55);
-  ruby.emissive  = glm::vec4(0.000000, 0.000000, 0.000000, 1.00);
+  ruby.ambient   = glm::vec4(0.174500, 0.011750, 0.011750, 1.0);
+  ruby.diffuse   = glm::vec4(0.614240, 0.041360, 0.041360, 1.0);
+  ruby.specular  = glm::vec4(0.727811, 0.626959, 0.626959, 1.0);
+  ruby.emissive  = glm::vec4(0.000000, 0.000000, 0.000000, 1.0);
   ruby.shininess = 76.8;
 
   gold.ambient   = glm::vec4(0.247250, 0.199500, 0.074500, 1.00);
@@ -316,15 +319,11 @@ void renderScene() {
 
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
   drawBook(P, V, Tfin, true);
+
+  drawMago (P, V);
   
   /*
-  Ry = glm::rotate   (I, glm::radians(rotY), glm::vec3(0,1,0));
-  Rx = glm::rotate   (I, glm::radians(rotX), glm::vec3(1,0,0));
-  Tz = glm::translate(I, glm::vec3(0.0, 0.0, desZ));
-  S = glm::scale    (I, glm::vec3(0.2, 0.2, 0.2));
-  drawObjectTex(staff,
-                  texStaff,
-                  P, V, S * Tz * Rx * Ry);
+  
   
   glm::mat4 Rv = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0));
   glm::mat4 Tv = glm::translate(I, glm::vec3(0.0, 0.0, 3.0));
@@ -486,3 +485,32 @@ void funTimer(double seconds, double &t0) {
   }
 }
 
+void drawMago(glm::mat4 P, glm::mat4 V){
+  glm::mat4 sMago = glm::scale    (I, glm::vec3(1.1, 0.75, 1));
+  glm::mat4 tMago = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
+  glm::mat4 M = tMago * sMago;
+  drawObjectMat(cone, gold, P, V, M);
+  glm::mat4 sBrazos = glm::scale    (I, glm::vec3(0.3, 0.4, 0.3));
+  glm::mat4 rotBrazo1 = glm::rotate   (I, glm::radians(30.0f), glm::vec3(0,0,1));
+  glm::mat4 transBrazo1 = glm::translate(I, glm::vec3(0.95, -2.0, 0.0));
+  M = transBrazo1 * rotBrazo1 * sBrazos;
+  drawObjectMat(cone, gold, P, V, M);
+  glm::mat4 rotBrazo2 = glm::rotate   (I, glm::radians(-30.0f), glm::vec3(0,0,1));
+  glm::mat4 transBrazo2 = glm::translate(I, glm::vec3(-0.95, -2.0, 0.0));
+  M = transBrazo2 * rotBrazo2 * sBrazos;
+  drawObjectMat(cone, gold, P, V, M);
+  glm::mat4 sCabeza = glm::scale    (I, glm::vec3(0.45, 0.20, 0.49));
+  glm::mat4 tCabeza = glm::translate(I, glm::vec3(0.0, -0.50, 0.2));
+  glm::mat4 rCabeza = glm::rotate   (I, glm::radians(-80.0f), glm::vec3(1,0,0));
+  M = tCabeza * rCabeza * sCabeza;
+  drawObjectMat(cone, gold, P, V, M);
+  glm::mat4 sCara = glm::scale    (I, glm::vec3(0.15, 0.10, 0.20));
+  glm::mat4 tCara = glm::translate(I, glm::vec3(0.0, -0.47, 0.2));
+  M = tCara * rCabeza * sCara;
+  drawObjectMat(sphere, gold, P, V, M);
+  glm::mat4 R = glm::rotate   (I, glm::radians(-25.0f), glm::vec3(0,0,1));
+  glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
+  glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
+  glm::mat4 S = glm::scale    (I, glm::vec3(0.1, 0.1, 0.1));
+  drawObjectTex(staff, texStaff, P, V, T * Ry * R  * S);
+}
