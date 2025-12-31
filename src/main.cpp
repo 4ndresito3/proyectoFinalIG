@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "TextureLoader.h"
+#include "MaterialLoader.h"
 
 void configScene();
 void renderScene();
@@ -38,6 +39,7 @@ void funTimer          (double seconds, double &t0);
 
 // Imagenes (texturas)
   TextureLoader textureLoader; 
+  MaterialLoader materialLoader;
 
 // Luces y materiales
   #define   NLD 1
@@ -140,8 +142,11 @@ void configScene() {
   crystal1.initModel("resources/models/crystal1.obj");
   crystal2.initModel("resources/models/crystal2.obj");
 
-// Imagenes (texturas)
+  // Imagenes (texturas)
   textureLoader.loadTextures();
+
+  // Cargar materiales
+  materialLoader.loadMaterials();
 
 // Luz ambiental global
   lightG.ambient = glm::vec3(0.5, 0.5, 0.5);
@@ -182,25 +187,6 @@ void configScene() {
   lightF[1].c0          = 1.000;
   lightF[1].c1          = 0.090;
   lightF[1].c2          = 0.032;
-
-// Materiales
-  mluz.ambient   = glm::vec4(0.0, 0.0, 0.0, 1.0);
-  mluz.diffuse   = glm::vec4(0.0, 0.0, 0.0, 1.0);
-  mluz.specular  = glm::vec4(0.0, 0.0, 0.0, 1.0);
-  mluz.emissive  = glm::vec4(1.0, 1.0, 1.0, 1.0);
-  mluz.shininess = 1.0;
-
-  ruby.ambient   = glm::vec4(0.174500, 0.011750, 0.011750, 1.0);
-  ruby.diffuse   = glm::vec4(0.614240, 0.041360, 0.041360, 1.0);
-  ruby.specular  = glm::vec4(0.727811, 0.626959, 0.626959, 1.0);
-  ruby.emissive  = glm::vec4(0.000000, 0.000000, 0.000000, 1.0);
-  ruby.shininess = 76.8;
-
-  gold.ambient   = glm::vec4(0.247250, 0.199500, 0.074500, 1.00);
-  gold.diffuse   = glm::vec4(0.751640, 0.606480, 0.226480, 1.00);
-  gold.specular  = glm::vec4(0.628281, 0.555802, 0.366065, 1.00);
-  gold.emissive  = glm::vec4(0.000000, 0.000000, 0.000000, 1.00);
-  gold.shininess = 51.2;
 }
 
 void renderScene() {
@@ -285,12 +271,12 @@ void setLights(glm::mat4 P, glm::mat4 V) {
 
   for(int i=0; i<NLP; i++) {
     glm::mat4 M = glm::translate(I,lightP[i].position) * glm::scale(I,glm::vec3(0.1));
-    drawObjectMat(sphere, mluz, P, V, M);
+    drawObjectMat(sphere, materialLoader.getMluz(), P, V, M);
   }
 
   for(int i=0; i<NLF; i++) {
     glm::mat4 M = glm::translate(I,lightF[i].position) * glm::scale(I,glm::vec3(0.025));
-    drawObjectMat(sphere, mluz, P, V, M);
+    drawObjectMat(sphere, materialLoader.getMluz(), P, V, M);
   }
 
 }
@@ -302,7 +288,7 @@ void drawMatrix(glm::mat4 P, glm::mat4 V) {
     for(int j = 0; j < 7; j++)
       for(int k = 0; k < 15; k++) {
         glm::mat4 T = glm::translate(I, glm::vec3(i - 7.0f, j - 3.0f, k - 7.0f));
-        drawObjectMat(sphere, gold, P, V, T * S);
+        drawObjectMat(sphere, materialLoader.getGold(), P, V, T * S);
       }
 }
 
@@ -316,20 +302,20 @@ void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
   glm::mat4 T1 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f)); //Para rotar en el extremo del libro
   glm::mat4 T2 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f));
   glm::mat4 S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
-  drawObjectMat(cube, gold, P, V, Dz * Dy * Dx * M * T2 * Rz * T1 * S);
+  drawObjectMat(cube, materialLoader.getGold(), P, V, Dz * Dy * Dx * M * T2 * Rz * T1 * S);
 
   Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1));
   T1 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f)); 
   T2 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f));
   glm::mat4 Tx = glm::translate(I, glm::vec3(0.75, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
-  drawObjectMat(cube, gold, P, V, Dz * Dy * Dx *M * Tx * T2 * Rz * T1 * S);
+  drawObjectMat(cube, materialLoader.getGold(), P, V, Dz * Dy * Dx *M * Tx * T2 * Rz * T1 * S);
   
   Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1));
   glm::mat4 Ry = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,1,0));
   Tx = glm::translate(I, glm::vec3(0.37, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(0.2/3, 1.0/3, 0.2/3));
-  drawObjectMat(cylinder, gold, P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
+  drawObjectMat(cylinder, materialLoader.getGold(), P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
 }
 
 void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -449,25 +435,25 @@ void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   glm::mat4 sMago = glm::scale    (I, glm::vec3(1.1, 0.75, 1));
   glm::mat4 tMago = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
   glm::mat4 M1 = tMago * sMago;
-  drawObjectMat(cone, gold, P, V, M * M1);
+  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
   glm::mat4 sBrazos = glm::scale    (I, glm::vec3(0.3, 0.4, 0.3));
   glm::mat4 rotBrazo1 = glm::rotate   (I, glm::radians(30.0f), glm::vec3(0,0,1));
   glm::mat4 transBrazo1 = glm::translate(I, glm::vec3(0.95, -2.0, 0.0));
   M1 = transBrazo1 * rotBrazo1 * sBrazos;
-  drawObjectMat(cone, gold, P, V, M * M1);
+  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
   glm::mat4 rotBrazo2 = glm::rotate   (I, glm::radians(-30.0f), glm::vec3(0,0,1));
   glm::mat4 transBrazo2 = glm::translate(I, glm::vec3(-0.95, -2.0, 0.0));
   M1 = transBrazo2 * rotBrazo2 * sBrazos;
-  drawObjectMat(cone, gold, P, V, M * M1);
+  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
   glm::mat4 sCabeza = glm::scale    (I, glm::vec3(0.45, 0.20, 0.49));
   glm::mat4 tCabeza = glm::translate(I, glm::vec3(0.0, -0.50, 0.2));
   glm::mat4 rCabeza = glm::rotate   (I, glm::radians(-80.0f), glm::vec3(1,0,0));
   M1 = tCabeza * rCabeza * sCabeza;
-  drawObjectMat(cone, gold, P, V, M * M1);
+  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
   glm::mat4 sCara = glm::scale    (I, glm::vec3(0.15, 0.10, 0.20));
   glm::mat4 tCara = glm::translate(I, glm::vec3(0.0, -0.47, 0.2));
   M1 = tCara * rCabeza * sCara;
-  drawObjectMat(sphere, gold, P, V, M * M1);
+  drawObjectMat(sphere, materialLoader.getGold(), P, V, M * M1);
   glm::mat4 R = glm::rotate   (I, glm::radians(-25.0f), glm::vec3(0,0,1));
   glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
   glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
