@@ -4,6 +4,7 @@
 #include "Shaders.h"
 #include "Model.h"
 #include "Texture.h"
+#include "TextureLoader.h"
 
 void configScene();
 void renderScene();
@@ -36,25 +37,7 @@ void funTimer          (double seconds, double &t0);
   Model crystal2;
 
 // Imagenes (texturas)
-  Texture imgNoEmissive;
-  Texture imgRuby;
-  Texture imgGold;
-  Texture imgEarth;
-  Texture imgChess;
-  Texture imgCubeDiffuse;
-  Texture imgCubeSpecular;
-  Texture imgWindow;
-  Texture imgWallDiffuse;
-  Texture imgWallSpecular;
-  Texture imgWallNormal;
-  Texture imgStaffDiffuse;
-  Texture imgStaffSpecular;
-  Texture imgStaffNormal;
-  Texture imgStaffEmissive;
-  Texture imgCrystalDiffuse;
-  Texture imgCrystalSpecular;
-  Texture imgCrystalNormal;
-  Texture imgCrystalEmissive;
+  TextureLoader textureLoader; 
 
 // Luces y materiales
   #define   NLD 1
@@ -67,15 +50,6 @@ void funTimer          (double seconds, double &t0);
   Material  mluz;
   Material  ruby;
   Material  gold;
-  Textures  texRuby;
-  Textures  texGold;
-  Textures  texEarth;
-  Textures  texChess;
-  Textures  texCube;
-  Textures  texWindow;
-  Textures  texWall;
-  Textures  texStaff;
-  Textures  texCrystal;
 
 // Viewport
   int w = 500;
@@ -167,21 +141,7 @@ void configScene() {
   crystal2.initModel("resources/models/crystal2.obj");
 
 // Imagenes (texturas)
-  imgNoEmissive.initTexture("resources/textures/imgNoEmissive.png");
-  imgRuby.initTexture("resources/textures/imgRuby.png");
-  imgGold.initTexture("resources/textures/imgGold.png");
-  imgEarth.initTexture("resources/textures/imgEarth.png");
-  imgChess.initTexture("resources/textures/imgChess.png");
-  imgCubeDiffuse.initTexture("resources/textures/imgCubeDiffuse.png");
-  imgCubeSpecular.initTexture("resources/textures/imgCubeSpecular.png");
-  imgWindow.initTexture("resources/textures/imgWindow.png");
-  imgWallDiffuse.initTexture("resources/textures/imgWallDiffuse.png");
-  imgWallSpecular.initTexture("resources/textures/imgWallSpecular.png");
-  imgWallNormal.initTexture("resources/textures/imgWallNormal.png");
-  imgCrystalDiffuse.initTexture("resources/textures/imgCrystalDiffuse.png");
-  imgCrystalSpecular.initTexture("resources/textures/imgCrystalSpecular.png");
-  imgCrystalEmissive.initTexture("resources/textures/imgCrystalEmissive.png");
-  imgCrystalNormal.initTexture("resources/textures/imgCrystalNormal.png");
+  textureLoader.loadTextures();
 
 // Luz ambiental global
   lightG.ambient = glm::vec3(0.5, 0.5, 0.5);
@@ -241,66 +201,6 @@ void configScene() {
   gold.specular  = glm::vec4(0.628281, 0.555802, 0.366065, 1.00);
   gold.emissive  = glm::vec4(0.000000, 0.000000, 0.000000, 1.00);
   gold.shininess = 51.2;
-
-  texRuby.diffuse   = imgRuby.getTexture();
-  texRuby.specular  = imgRuby.getTexture();
-  texRuby.emissive  = imgNoEmissive.getTexture();
-  texRuby.normal    = 0;
-  texRuby.shininess = 76.8;
-
-  texGold.diffuse   = imgGold.getTexture();
-  texGold.specular  = imgGold.getTexture();
-  texGold.emissive  = imgNoEmissive.getTexture();
-  texGold.normal    = 0;
-  texGold.shininess = 51.2;
-
-  texEarth.diffuse   = imgEarth.getTexture();
-  texEarth.specular  = imgEarth.getTexture();
-  texEarth.emissive  = imgNoEmissive.getTexture();
-  texEarth.normal    = 0;
-  texEarth.shininess = 10.0;
-
-  texChess.diffuse   = imgChess.getTexture();
-  texChess.specular  = imgChess.getTexture();
-  texChess.emissive  = imgNoEmissive.getTexture();
-  texChess.normal    = 0;
-  texChess.shininess = 10.0;
-
-  texCube.diffuse    = imgCubeDiffuse.getTexture();
-  texCube.specular   = imgCubeSpecular.getTexture();
-  texCube.emissive   = imgNoEmissive.getTexture();
-  texCube.normal     = 0;
-  texCube.shininess  = 10.0;
-
-  texWindow.diffuse   = imgWindow.getTexture();
-  texWindow.specular  = imgWindow.getTexture();
-  texWindow.emissive  = imgWindow.getTexture();
-  texWindow.normal    = 0;
-  texWindow.shininess = 10.0;
-
-  texWall.diffuse    = imgWallDiffuse.getTexture();
-  texWall.specular   = imgWallSpecular.getTexture();
-  texWall.emissive   = imgNoEmissive.getTexture();
-  texWall.normal     = imgWallNormal.getTexture();
-  texWall.shininess  = 51.2;
-
-   // Imagenes (texturas)
-  imgStaffDiffuse.initTexture("resources/textures/imgStaffDiffuse.png");
-  imgStaffSpecular.initTexture("resources/textures/imgStaffSpecular.png");
-  imgStaffNormal.initTexture("resources/textures/imgStaffNormal.png");
-  imgStaffEmissive.initTexture("resources/textures/imgStaffEmissive.png");
-
-  texStaff.diffuse    = imgStaffDiffuse.getTexture();
-  texStaff.specular   = imgStaffSpecular.getTexture();
-  texStaff.emissive   = imgStaffEmissive.getTexture();
-  texStaff.normal     = imgStaffNormal.getTexture();
-  texStaff.shininess  = 32.0f;
-
-  texCrystal.diffuse    = imgCrystalDiffuse.getTexture();
-  texCrystal.specular   = imgCrystalSpecular.getTexture();
-  texCrystal.emissive   = imgCrystalEmissive.getTexture();
-  texCrystal.normal     = imgCrystalNormal.getTexture();
-  texCrystal.shininess  = 76.8f;
 }
 
 void renderScene() {
@@ -334,22 +234,20 @@ void renderScene() {
  // Dibujamos la escena
   drawMatrix(P,V);
 
-  glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
+  glm::mat4 S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
-  drawObjectTex(plane, texWall, P, V, T * S);
+  drawObjectTex(plane, textureLoader.getWall(), P, V, T * S);
   S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0));
 
-  S = glm::scale    (I, glm::vec3(8.0, 1.0, 4.0));
   glm::mat4 Rx = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0)); //fondo de atras
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
-  glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -8.0));
-  drawObjectTex(plane, texWall, P, V, Tz * Ty * Rx * S);
+  glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -4.0));
+  drawObjectTex(plane, textureLoader.getWall(), P, V, Tz * Ty * Rx * S);
 
-  S = glm::scale    (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado
   Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
-  glm::mat4 Tx = glm::translate(I, glm::vec3(-8.0, 0.0, 0.0));
-  drawObjectTex(plane, texWall, P, V, Ty * Tx * Rz * S);
+  glm::mat4 Tx = glm::translate(I, glm::vec3(-4.0, 0.0, 0.0));
+  drawObjectTex(plane, textureLoader.getWall(), P, V, Ty * Tx * Rz * S);
 
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 0.0, 3.0));
   drawCrystal1(P, V, Tfin);
@@ -397,10 +295,10 @@ void setLights(glm::mat4 P, glm::mat4 V) {
 
 void drawMatrix(glm::mat4 P, glm::mat4 V) {
   glm::mat4 S = glm::scale (I, glm::vec3(0.015, 0.015, 0.015));
-  for(int i = 0; i < 14; i++)
+  for(int i = 0; i < 7; i++)
     for(int j = 0; j < 7; j++)
-      for(int k = 0; k < 14; k++) {
-        glm::mat4 T = glm::translate(I, glm::vec3(i - 7.0f, j - 3.0f, k - 7.0f));
+      for(int k = 0; k < 7; k++) {
+        glm::mat4 T = glm::translate(I, glm::vec3(i - 3.0f, j - 3.0f, k - 3.0f));
         drawObjectMat(sphere, gold, P, V, T * S);
       }
 }
@@ -435,7 +333,7 @@ void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
   glm::mat4 S = glm::scale(I, glm::vec3(3.0f, 3.0f, 3.0f));
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0f, -3.0f, 0.0f)); 
-  drawObjectTex(crystal1, texCrystal, P, V, M * Ty * S);
+  drawObjectTex(crystal1, textureLoader.getCrystal(), P, V, M * Ty * S);
 
 }
 
@@ -443,7 +341,7 @@ void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
   glm::mat4 S = glm::scale(I, glm::vec3(4.0f, 4.0f, 4.0f));
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0f, -2.1f, 0.0f)); 
-  drawObjectTex(crystal2, texRuby, P, V, M * Ty * S);
+  drawObjectTex(crystal2, textureLoader.getRuby(), P, V, M * Ty * S);
 
 }
 
@@ -571,5 +469,5 @@ void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
   glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
   glm::mat4 S = glm::scale    (I, glm::vec3(0.1, 0.1, 0.1));
-  drawObjectTex(staff, texStaff, P, V, M * T * Ry * R  * S);
+  drawObjectTex(staff, textureLoader.getStaff(), P, V, M * T * Ry * R  * S);
 }
