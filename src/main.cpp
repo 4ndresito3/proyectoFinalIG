@@ -11,6 +11,8 @@ void setLights (glm::mat4 P, glm::mat4 V);
 void drawMatrix(glm::mat4 P, glm::mat4 V);
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
 void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model &model, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 
@@ -30,6 +32,8 @@ void funTimer          (double seconds, double &t0);
   Model staff;
   Model cylinder;
   Model cone;
+  Model crystal1;
+  Model crystal2;
 
 // Imagenes (texturas)
   Texture imgNoEmissive;
@@ -47,6 +51,10 @@ void funTimer          (double seconds, double &t0);
   Texture imgStaffSpecular;
   Texture imgStaffNormal;
   Texture imgStaffEmissive;
+  Texture imgCrystalDiffuse;
+  Texture imgCrystalSpecular;
+  Texture imgCrystalNormal;
+  Texture imgCrystalEmissive;
 
 // Luces y materiales
   #define   NLD 1
@@ -67,6 +75,7 @@ void funTimer          (double seconds, double &t0);
   Textures  texWindow;
   Textures  texWall;
   Textures  texStaff;
+  Textures  texCrystal;
 
 // Viewport
   int w = 500;
@@ -154,6 +163,8 @@ void configScene() {
   cylinder.initModel("resources/models/cylinder.obj");
   staff.initModel("resources/models/staff.obj");
   cone.initModel("resources/models/cone.obj");
+  crystal1.initModel("resources/models/crystal1.obj");
+  crystal2.initModel("resources/models/crystal2.obj");
 
 // Imagenes (texturas)
   imgNoEmissive.initTexture("resources/textures/imgNoEmissive.png");
@@ -167,6 +178,10 @@ void configScene() {
   imgWallDiffuse.initTexture("resources/textures/imgWallDiffuse.png");
   imgWallSpecular.initTexture("resources/textures/imgWallSpecular.png");
   imgWallNormal.initTexture("resources/textures/imgWallNormal.png");
+  imgCrystalDiffuse.initTexture("resources/textures/imgCrystalDiffuse.png");
+  imgCrystalSpecular.initTexture("resources/textures/imgCrystalSpecular.png");
+  imgCrystalEmissive.initTexture("resources/textures/imgCrystalEmissive.png");
+  imgCrystalNormal.initTexture("resources/textures/imgCrystalNormal.png");
 
 // Luz ambiental global
   lightG.ambient = glm::vec3(0.5, 0.5, 0.5);
@@ -280,6 +295,12 @@ void configScene() {
   texStaff.emissive   = imgStaffEmissive.getTexture();
   texStaff.normal     = imgStaffNormal.getTexture();
   texStaff.shininess  = 32.0f;
+
+  texCrystal.diffuse    = imgCrystalDiffuse.getTexture();
+  texCrystal.specular   = imgCrystalSpecular.getTexture();
+  texCrystal.emissive   = imgCrystalEmissive.getTexture();
+  texCrystal.normal     = imgCrystalNormal.getTexture();
+  texCrystal.shininess  = 76.8f;
 }
 
 void renderScene() {
@@ -328,7 +349,16 @@ void renderScene() {
   glm::mat4 Tx = glm::translate(I, glm::vec3(-4.0, 0.0, 0.0));
   drawObjectTex(plane, texWall, P, V, Ty * Tx * Rz * S);
 
-  glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
+  glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 0.0, 3.0));
+  drawCrystal1(P, V, Tfin);
+
+  Tfin = glm::translate(I, glm::vec3(0.0, 0.0, -3.0));
+  drawCrystal1(P, V, Tfin);
+
+  Tfin = glm::translate(I, glm::vec3(2.0, 0.0, 3.0));
+  drawCrystal2(P, V, Tfin);
+
+  Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
   drawBook(P, V, Tfin, true);
   glm::mat4 Mago = glm::translate(I, glm::vec3(0.0, 0.0, 0.0));
   drawMago (P, V, Mago);
@@ -397,6 +427,22 @@ void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
   Tx = glm::translate(I, glm::vec3(0.37, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(0.2/3, 1.0/3, 0.2/3));
   drawObjectMat(cylinder, gold, P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
+}
+
+void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+
+  glm::mat4 S = glm::scale(I, glm::vec3(3.0f, 3.0f, 3.0f));
+  glm::mat4 Ty = glm::translate(I, glm::vec3(0.0f, -3.0f, 0.0f)); 
+  drawObjectTex(crystal1, texCrystal, P, V, M * Ty * S);
+
+}
+
+void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+
+  glm::mat4 S = glm::scale(I, glm::vec3(4.0f, 4.0f, 4.0f));
+  glm::mat4 Ty = glm::translate(I, glm::vec3(0.0f, -2.1f, 0.0f)); 
+  drawObjectTex(crystal2, texRuby, P, V, M * Ty * S);
+
 }
 
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M) {
