@@ -27,3 +27,8 @@ make [-j($nproc)]
 ## 3. En el CMakeLists.txt
 
 Meter como PROJECT_NAME proyecto_final para que sea ignorado para el github.
+
+# Obtencion de modelos y texturas
+
+Para los modelos cogerlos de [CGTrader](https://www.cgtrader.com/)
+Para las texturas cogerlas de [CGBookCase](https://www.cgbookcase.com/)
