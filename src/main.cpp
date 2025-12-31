@@ -234,19 +234,21 @@ void renderScene() {
  // Dibujamos la escena
   drawMatrix(P,V);
 
-  glm::mat4 S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0)); //suelo
+  glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
   drawObjectTex(plane, textureLoader.getWall(), P, V, T * S);
   S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0));
 
+  S = glm::scale    (I, glm::vec3(8.0, 1.0, 4.0));
   glm::mat4 Rx = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0)); //fondo de atras
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
-  glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -4.0));
+  glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -8.0));
   drawObjectTex(plane, textureLoader.getWall(), P, V, Tz * Ty * Rx * S);
 
+  S = glm::scale    (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado
   Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
-  glm::mat4 Tx = glm::translate(I, glm::vec3(-4.0, 0.0, 0.0));
+  glm::mat4 Tx = glm::translate(I, glm::vec3(-8.0, 0.0, 0.0));
   drawObjectTex(plane, textureLoader.getWall(), P, V, Ty * Tx * Rz * S);
 
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 0.0, 3.0));
@@ -294,11 +296,12 @@ void setLights(glm::mat4 P, glm::mat4 V) {
 }
 
 void drawMatrix(glm::mat4 P, glm::mat4 V) {
+
   glm::mat4 S = glm::scale (I, glm::vec3(0.015, 0.015, 0.015));
-  for(int i = 0; i < 7; i++)
+  for(int i = 0; i < 15; i++)
     for(int j = 0; j < 7; j++)
-      for(int k = 0; k < 7; k++) {
-        glm::mat4 T = glm::translate(I, glm::vec3(i - 3.0f, j - 3.0f, k - 3.0f));
+      for(int k = 0; k < 15; k++) {
+        glm::mat4 T = glm::translate(I, glm::vec3(i - 7.0f, j - 3.0f, k - 7.0f));
         drawObjectMat(sphere, gold, P, V, T * S);
       }
 }
@@ -405,7 +408,7 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
 void funScroll(GLFWwindow* window, double xoffset, double yoffset) {
 
   if(yoffset>0) fovy -= fovy>10.0f ? 5.0f : 0.0f;
-  if(yoffset<0) fovy += fovy<90.0f ? 5.0f : 0.0f;
+  if(yoffset<0) fovy += fovy<120.0f ? 5.0f : 0.0f;
 
 }
 
