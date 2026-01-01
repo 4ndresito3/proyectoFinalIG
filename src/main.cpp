@@ -417,10 +417,10 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       break;
     case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
     case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
-    case GLFW_KEY_S:  cameraMovY -= 0.2f;   break;
-    case GLFW_KEY_W:  cameraMovY += 0.2f;   break;
-    case GLFW_KEY_Q:  cameraMovZ -= 0.2f;   break;
-    case GLFW_KEY_E:  cameraMovZ += 0.2f;   break;
+    case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
+    case GLFW_KEY_W:  cameraMovZ -= 0.2f;   break;
+    case GLFW_KEY_Q:  cameraMovY += 0.2f;   break;
+    case GLFW_KEY_E:  cameraMovY -= 0.2f;   break;
     case GLFW_KEY_R:
       desX = 0.0f;
       desY = 0.0f;
