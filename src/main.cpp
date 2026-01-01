@@ -347,7 +347,7 @@ void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
   
   Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //Cilindro del libro
   glm::mat4 Ry = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,1,0));
-  Tx = glm::translate(I, glm::vec3(0.37, 0.0, 0.0));
+  Tx = glm::translate(I, glm::vec3(0.375, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(0.2/3, 1.0/3, 0.2/3));
   drawObjectTex(cylinder, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
 }
