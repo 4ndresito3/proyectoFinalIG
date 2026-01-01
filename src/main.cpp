@@ -63,6 +63,17 @@ void funTimer          (double seconds, double &t0);
   float desZ = 0.0;
   float rotZBook = 0.0;
   bool  rotZUp = true;
+  float autoYBook = 1.0;
+  bool  autoYUp = true;
+  float autoXBook = 0.0;
+  bool  autoXleft = true;
+  float cameraMovX = 0.0;
+  float cameraMovY = 0.0;
+  float cameraMovZ = 0.0;
+  //Mejorar rotacion camara
+  bool firstMouse = true;
+  double lastX, lastY;
+  float sensitivity = 0.1f;
 
 // Movimiento de camara
   float fovy   = 60.0;
@@ -208,8 +219,8 @@ void renderScene() {
   float x = 10.0f*glm::cos(glm::radians(alphaY))*glm::sin(glm::radians(alphaX));
   float y = 10.0f*glm::sin(glm::radians(alphaY));
   float z = 10.0f*glm::cos(glm::radians(alphaY))*glm::cos(glm::radians(alphaX));
-  glm::vec3 eye   (  x,   y,   z);
-  glm::vec3 center(0.0, 0.0,  0.0);
+  glm::vec3 eye   (x + cameraMovX, y + cameraMovY, z + cameraMovZ);
+  glm::vec3 center(cameraMovX, cameraMovY, cameraMovZ);
   glm::vec3 up    (0.0, 1.0,  0.0);
   glm::mat4 V = glm::lookAt(eye, center, up);
   shaders.setVec3("ueye",eye);
@@ -223,17 +234,16 @@ void renderScene() {
   glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
   drawObjectTex(plane, textureLoader.getWall(), P, V, T * S);
-  S = glm::scale    (I, glm::vec3(4.0, 1.0, 4.0));
 
-  S = glm::scale    (I, glm::vec3(8.0, 1.0, 4.0));
+  S = glm::scale               (I, glm::vec3(8.0, 1.0, 4.0));
   glm::mat4 Rx = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0)); //fondo de atras
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
   glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -8.0));
   drawObjectTex(plane, textureLoader.getWall(), P, V, Tz * Ty * Rx * S);
 
-  S = glm::scale    (I, glm::vec3(4.0, 1.0, 8.0));
+  S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado
-  Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
+  Ty = glm::translate          (I, glm::vec3(0.0, 1.0, 0.0));
   glm::mat4 Tx = glm::translate(I, glm::vec3(-8.0, 0.0, 0.0));
   drawObjectTex(plane, textureLoader.getWall(), P, V, Ty * Tx * Rz * S);
 
@@ -248,6 +258,14 @@ void renderScene() {
 
   Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
   drawBook(P, V, Tfin, true);
+
+  Tfin = glm::translate(I, glm::vec3(3.0, autoYBook, 2.0));
+  drawBook(P, V, Tfin, false);
+
+  Tfin = glm::translate(I, glm::vec3(autoXBook + 1.0, autoYBook + 2.0, -3.0));
+  glm::mat4 Rfin = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
+  drawBook(P, V, Tfin * Rfin, false);
+
   glm::mat4 Mago = glm::translate(I, glm::vec3(0.0, 0.0, 0.0));
   drawMago (P, V, Mago);
 
@@ -298,24 +316,39 @@ void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
   glm::mat4 Dy = glm::translate(I, glm::vec3(0.0f, control ? desY : 0.0f, 0.0f));
   glm::mat4 Dz = glm::translate(I, glm::vec3(0.0f, 0.0f, control ? desZ : 0.0f));
 
-  glm::mat4 Rz = glm::rotate   (I, glm::radians(rotZBook), glm::vec3(0,0,1));
+  glm::mat4 Rz = glm::rotate   (I, glm::radians(rotZBook), glm::vec3(0,0,1)); //Portada del libro 1
   glm::mat4 T1 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f)); //Para rotar en el extremo del libro
   glm::mat4 T2 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f));
   glm::mat4 S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
-  drawObjectMat(cube, materialLoader.getGold(), P, V, Dz * Dy * Dx * M * T2 * Rz * T1 * S);
+  drawObjectTex(cube, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * T2 * Rz * T1 * S);
 
-  Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1));
+  Rz = glm::rotate   (I, glm::radians(rotZBook), glm::vec3(0,0,1)); //Paginas del libro 1
+  T1 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f)); //Para rotar en el extremo del libro
+  T2 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f));
+  S = glm::scale(I, glm::vec3(1.0/4, 0.15/5, 1.0/4));
+  glm::mat4 Tp = glm::translate(I, glm::vec3(0.05f, 0.05f, 0.0f));
+  drawObjectMat(cube, materialLoader.getPage(), P, V, Dz * Dy * Dx * M * Tp * T2 * Rz * T1 * S);
+
+  Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1)); //Portada del libro 2
   T1 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f)); 
   T2 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f));
   glm::mat4 Tx = glm::translate(I, glm::vec3(0.75, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
-  drawObjectMat(cube, materialLoader.getGold(), P, V, Dz * Dy * Dx *M * Tx * T2 * Rz * T1 * S);
+  drawObjectTex(cube, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * Tx * T2 * Rz * T1 * S);
+
+  Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1)); //Paginas del libro 2
+  T1 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f)); 
+  T2 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f));
+  Tx = glm::translate(I, glm::vec3(0.75, 0.0, 0.0));
+  Tp = glm::translate(I, glm::vec3(-0.05f, 0.05f, 0.0f));
+  S = glm::scale(I, glm::vec3(1.0/4, 0.15/5, 1.0/4));
+  drawObjectMat(cube, materialLoader.getPage(), P, V, Dz * Dy * Dx * M * Tp * Tx * T2 * Rz * T1 * S);
   
-  Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1));
+  Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //Cilindro del libro
   glm::mat4 Ry = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,1,0));
   Tx = glm::translate(I, glm::vec3(0.37, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(0.2/3, 1.0/3, 0.2/3));
-  drawObjectMat(cylinder, materialLoader.getGold(), P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
+  drawObjectTex(cylinder, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
 }
 
 void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -382,11 +415,20 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       else
         desZ += 0.2f;   // z
       break;
+    case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
+    case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
+    case GLFW_KEY_S:  cameraMovY -= 0.2f;   break;
+    case GLFW_KEY_W:  cameraMovY += 0.2f;   break;
+    case GLFW_KEY_Q:  cameraMovZ -= 0.2f;   break;
+    case GLFW_KEY_E:  cameraMovZ += 0.2f;   break;
     case GLFW_KEY_R:
       desX = 0.0f;
       desY = 0.0f;
       desZ = 0.0f;
-      break;
+      cameraMovX = 0.0f;
+      cameraMovY = 0.0f;
+      cameraMovZ = 0.0f;
+      break;   
   }
 
 }
@@ -400,21 +442,40 @@ void funScroll(GLFWwindow* window, double xoffset, double yoffset) {
 
 void funCursorPos(GLFWwindow* window, double xpos, double ypos) {
 
-  if(glfwGetMouseButton(window,GLFW_MOUSE_BUTTON_LEFT)==GLFW_RELEASE) return;
+  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+    firstMouse = true;
+    return;
+  }
 
-  float limY = 89.0;
-  alphaX = 90.0*(2.0*xpos/(float)w - 1.0);
-  alphaY = 90.0*(1.0 - 2.0*ypos/(float)h);
-  if(alphaY<-limY) alphaY = -limY;
-  if(alphaY> limY) alphaY =  limY;
+  if (firstMouse) {
+    lastX = xpos;
+    lastY = ypos;
+    firstMouse = false;
+    return;
+  }
 
+  float dx = xpos - lastX;
+  float dy = lastY - ypos; // invertido para Y
+
+  lastX = xpos;
+  lastY = ypos;
+
+  float sensitivity = 0.3f;
+
+  alphaX += dx * sensitivity;
+  alphaY += dy * sensitivity;
+
+  float limY = 89.0f;
+  if (alphaY < -limY) alphaY = -limY;
+  if (alphaY >  limY) alphaY =  limY;
 }
+
 
 void funTimer(double seconds, double &t0) { 
   double t1 = glfwGetTime();
   bool up = true;
-  if(t1-t0 > seconds) {
-    if(rotZUp) {
+  if(t1-t0 > seconds) { 
+    if(rotZUp) { //animacion del libro abriendo y cerrando
         rotZBook -= 5.0f;
         if(rotZBook <= -90.0f) {
           rotZBook = -90.0f;
@@ -425,6 +486,32 @@ void funTimer(double seconds, double &t0) {
       if(rotZBook >= 0.0f) {
         rotZBook = 0.0f;
         rotZUp = true;
+      }
+    }
+    if(autoYUp) { //animacion del libro que oscila arriba y abajo
+        autoYBook -= 0.05f;
+        if(autoYBook <= 0.0f) {
+          autoYBook = 0.0f;
+          autoYUp = false;
+        }
+    } else {
+      autoYBook += 0.05f;
+      if(autoYBook >= 1.0f) {
+        autoYBook = 1.0f;
+        autoYUp = true;
+      }
+    }
+    if(autoXleft) { //animacion del libro que se mueve izquierda y derecha
+        autoXBook -= 0.05f;
+        if(autoXBook <= -2.0f) {
+          autoXBook = -2.0f;
+          autoXleft = false;
+        }
+    } else {
+      autoXBook += 0.05f;
+      if(autoXBook >= 2.0f) {
+        autoXBook = 2.0f;
+        autoXleft = true;
       }
     }
     t0 = t1;

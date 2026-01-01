@@ -29,6 +29,9 @@ private:
     Texture imgCrystalSpecular;
     Texture imgCrystalNormal;
     Texture imgCrystalEmissive;
+    Texture imgBrownLeatherDiffuse;
+    Texture imgBrownLeatherSpecular;
+    Texture imgBrownLeatherNormal;
 
     // Structs Textures combinados
     Textures texRuby;
@@ -40,6 +43,7 @@ private:
     Textures texWall;
     Textures texStaff;
     Textures texCrystal;
+    Textures texCover;
 
 public:
     // Constructor y Destructor
@@ -59,6 +63,7 @@ public:
     Textures getWall() const;
     Textures getStaff() const;
     Textures getCrystal() const;
+    Textures getCover() const;
 };
 
 #endif /* TEXTURELOADER_H */
