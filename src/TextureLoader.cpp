@@ -34,8 +34,10 @@ void TextureLoader::loadTextures() {
     imgCrystalSpecular.initTexture("resources/textures/imgCrystalSpecular.png");
     imgCrystalNormal.initTexture("resources/textures/imgCrystalNormal.png");
     imgCrystalEmissive.initTexture("resources/textures/imgCrystalEmissive.png");
-
-    // Crear los struct Textures combinados
+    imgBrownLeatherDiffuse.initTexture("resources/textures/BrownLeatherDiffuse.png");
+    imgBrownLeatherSpecular.initTexture("resources/textures/BrownLeatherSpecular.png");
+    imgBrownLeatherNormal.initTexture("resources/textures/BrownLeatherNormal.png");
+    
     // Ruby
     texRuby.diffuse   = imgRuby.getTexture();
     texRuby.specular  = imgRuby.getTexture();
@@ -98,6 +100,13 @@ void TextureLoader::loadTextures() {
     texCrystal.emissive  = imgCrystalEmissive.getTexture();
     texCrystal.normal    = imgCrystalNormal.getTexture();
     texCrystal.shininess = 76.8;
+
+    // Cover (Brown Leather)
+    texCover.diffuse   = imgBrownLeatherDiffuse.getTexture();
+    texCover.specular  = imgBrownLeatherSpecular.getTexture();
+    texCover.emissive  = imgCrystalEmissive.getTexture(); // No emisiva - negro
+    texCover.normal    = imgBrownLeatherNormal.getTexture();
+    texCover.shininess = 32.0;
 }
 
 // Getters para cada tipo de textura
@@ -135,4 +144,8 @@ Textures TextureLoader::getStaff() const {
 
 Textures TextureLoader::getCrystal() const {
     return texCrystal;
+}
+
+Textures TextureLoader::getCover() const {
+    return texCover;
 }

@@ -8,6 +8,7 @@ private:
     Material mluz;
     Material ruby;
     Material gold;
+    Material page;
 
 public:
     MaterialLoader();
@@ -18,6 +19,7 @@ public:
     Material getMluz() const;
     Material getRuby() const;
     Material getGold() const;
+    Material getPage() const;
 };
 
 #endif /* MATERIALLOADER_H */
