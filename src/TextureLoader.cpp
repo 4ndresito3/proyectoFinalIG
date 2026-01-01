@@ -37,6 +37,15 @@ void TextureLoader::loadTextures() {
     imgBrownLeatherDiffuse.initTexture("resources/textures/BrownLeatherDiffuse.png");
     imgBrownLeatherSpecular.initTexture("resources/textures/BrownLeatherSpecular.png");
     imgBrownLeatherNormal.initTexture("resources/textures/BrownLeatherNormal.png");
+    imgStoneWallDiffuse.initTexture("resources/textures/StoneWallDiffuse.png");
+    imgStoneWallSpecular.initTexture("resources/textures/StoneWallSpecular.png");
+    imgStoneWallNormal.initTexture("resources/textures/StoneWallNormal.png");
+    imgWoodDiffuse.initTexture("resources/textures/WoodDiffuse.png");
+    imgWoodSpecular.initTexture("resources/textures/WoodSpecular.png");
+    imgWoodNormal.initTexture("resources/textures/WoodNormal.png");
+    imgGreyRockDiffuse.initTexture("resources/textures/GreyRockDiffuse.png");
+    imgGreyRockSpecular.initTexture("resources/textures/GreyRockSpecular.png");
+    imgGreyRockNormal.initTexture("resources/textures/GreyRockNormal.png");
     
     // Ruby
     texRuby.diffuse   = imgRuby.getTexture();
@@ -104,9 +113,30 @@ void TextureLoader::loadTextures() {
     // Cover (Brown Leather)
     texCover.diffuse   = imgBrownLeatherDiffuse.getTexture();
     texCover.specular  = imgBrownLeatherSpecular.getTexture();
-    texCover.emissive  = imgCrystalEmissive.getTexture(); // No emisiva - negro
+    texCover.emissive  = imgNoEmissive.getTexture(); 
     texCover.normal    = imgBrownLeatherNormal.getTexture();
-    texCover.shininess = 32.0;
+    texCover.shininess = 26.0;
+
+    // Stone Wall
+    texStoneWall.diffuse   = imgStoneWallDiffuse.getTexture();
+    texStoneWall.specular  = imgStoneWallSpecular.getTexture();
+    texStoneWall.emissive  = imgNoEmissive.getTexture();
+    texStoneWall.normal    = imgStoneWallNormal.getTexture();
+    texStoneWall.shininess = 90.0;
+
+    // Wood
+    texWood.diffuse   = imgWoodDiffuse.getTexture();
+    texWood.specular  = imgWoodSpecular.getTexture();
+    texWood.emissive  = imgNoEmissive.getTexture();
+    texWood.normal    = imgWoodNormal.getTexture();
+    texWood.shininess = 25.0;
+
+    // Grey Rock
+    texGreyRock.diffuse   = imgGreyRockDiffuse.getTexture();
+    texGreyRock.specular  = imgGreyRockSpecular.getTexture();
+    texGreyRock.emissive  = imgNoEmissive.getTexture();
+    texGreyRock.normal    = imgGreyRockNormal.getTexture();
+    texGreyRock.shininess = 5.0;
 }
 
 // Getters para cada tipo de textura
@@ -148,4 +178,16 @@ Textures TextureLoader::getCrystal() const {
 
 Textures TextureLoader::getCover() const {
     return texCover;
+}
+
+Textures TextureLoader::getStoneWall() const {
+    return texStoneWall;
+}
+
+Textures TextureLoader::getWood() const {
+    return texWood;
+}
+
+Textures TextureLoader::getGreyRock() const {
+    return texGreyRock;
 }

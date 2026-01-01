@@ -27,6 +27,13 @@ void MaterialLoader::loadMaterials() {
     page.specular  = glm::vec4(0.20, 0.20, 0.20, 1.0);
     page.emissive  = glm::vec4(0.00, 0.00, 0.00, 1.0);
     page.shininess = 10.0;
+
+    wall.ambient   = glm::vec4(0.0f, 0.1f, 0.06f, 0.5f);
+    wall.diffuse   = glm::vec4(0.0f, 0.50980392f, 0.50980392f, 0.5f);
+    wall.specular  = glm::vec4(0.50196078f, 0.50196078f, 0.50196078f, 0.5f);
+    wall.emissive  = glm::vec4(0.0f, 0.0f, 0.0f, 0.5f); 
+    wall.shininess = 32.0f;
+
 }
 
 Material MaterialLoader::getMluz() const { 
@@ -38,7 +45,9 @@ Material MaterialLoader::getRuby() const {
 Material MaterialLoader::getGold() const { 
     return gold; 
 }
-
 Material MaterialLoader::getPage() const {
     return page;
+}
+Material MaterialLoader::getWall() const {
+    return wall;
 }

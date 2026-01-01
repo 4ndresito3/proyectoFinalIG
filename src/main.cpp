@@ -76,7 +76,7 @@ void funTimer          (double seconds, double &t0);
   float sensitivity = 0.1f;
 
 // Movimiento de camara
-  float fovy   = 60.0;
+  float fovy   = 80.0;
   float alphaX =  0.0;
   float alphaY =  0.0;
 
@@ -219,9 +219,9 @@ void renderScene() {
   float x = 10.0f*glm::cos(glm::radians(alphaY))*glm::sin(glm::radians(alphaX));
   float y = 10.0f*glm::sin(glm::radians(alphaY));
   float z = 10.0f*glm::cos(glm::radians(alphaY))*glm::cos(glm::radians(alphaX));
-  glm::vec3 eye   (x + cameraMovX, y + cameraMovY, z + cameraMovZ);
+  glm::vec3 eye   (2.0 + x + cameraMovX, 2.0 + y + cameraMovY, z + cameraMovZ);
   glm::vec3 center(cameraMovX, cameraMovY, cameraMovZ);
-  glm::vec3 up    (0.0, 1.0,  0.0);
+  glm::vec3 up    (0.0, 1.0, 0.0);
   glm::mat4 V = glm::lookAt(eye, center, up);
   shaders.setVec3("ueye",eye);
 
@@ -233,19 +233,13 @@ void renderScene() {
 
   glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
-  drawObjectTex(plane, textureLoader.getWall(), P, V, T * S);
+  drawObjectTex(plane, textureLoader.getGreyRock(), P, V, T * S);
 
   S = glm::scale               (I, glm::vec3(8.0, 1.0, 4.0));
   glm::mat4 Rx = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0)); //fondo de atras
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
   glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -8.0));
-  drawObjectTex(plane, textureLoader.getWall(), P, V, Tz * Ty * Rx * S);
-
-  S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
-  glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado
-  Ty = glm::translate          (I, glm::vec3(0.0, 1.0, 0.0));
-  glm::mat4 Tx = glm::translate(I, glm::vec3(-8.0, 0.0, 0.0));
-  drawObjectTex(plane, textureLoader.getWall(), P, V, Ty * Tx * Rz * S);
+  drawObjectTex(plane, textureLoader.getStoneWall(), P, V, Tz * Ty * Rx * S);
 
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 0.0, 3.0));
   drawCrystal1(P, V, Tfin);
@@ -269,6 +263,13 @@ void renderScene() {
   glm::mat4 Mago = glm::translate(I, glm::vec3(0.0, 0.0, 0.0));
   drawMago (P, V, Mago);
 
+  S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
+  glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado || pared transparente
+  Ty = glm::translate          (I, glm::vec3(0.0, 1.0, 0.0));
+  glm::mat4 Tx = glm::translate(I, glm::vec3(-8.0, 0.0, 0.0));
+  glDepthMask(GL_FALSE);
+  drawObjectMat(plane, materialLoader.getWall(), P, V, Ty * Tx * Rz * S);
+  glDepthMask(GL_TRUE);
   /*
   
   

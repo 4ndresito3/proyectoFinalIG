@@ -9,6 +9,7 @@ private:
     Material ruby;
     Material gold;
     Material page;
+    Material wall;
 
 public:
     MaterialLoader();
@@ -20,6 +21,7 @@ public:
     Material getRuby() const;
     Material getGold() const;
     Material getPage() const;
+    Material getWall() const;
 };
 
 #endif /* MATERIALLOADER_H */
