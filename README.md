@@ -4,7 +4,7 @@
 
 Se clona el proyecto mediante ``` git clone https://github.com/4ndresito3/proyectoFinalIG.git ```
 
-## 2. Ajustes de proyecto para compilacion correcta
+### 2. Ajustes de proyecto para compilacion correcta
 
 Configuracion Windows
 
@@ -24,12 +24,22 @@ cmake ..
 make [-j($nproc)]
 ```
 
-## 3. En el CMakeLists.txt
+### 3. En el CMakeLists.txt
 
 Meter como PROJECT_NAME proyecto_final para que sea ignorado para el github.
 
-# Obtencion de modelos y texturas
+## Obtencion de modelos y texturas
 
 Para los modelos cogerlos de [CGTrader](https://www.cgtrader.com/)
 
 Para las texturas cogerlas de [CGBookCase](https://www.cgbookcase.com/)
+
+## Milestones
+
+[-] Poner más luces y hacer que se muevan
+
+[x] Luz roja
+
+[x] Lanzar hechizo con libro cerca y brazo levantado
+
+Lanzar hechizo con brazo levantado y agitar cámara
