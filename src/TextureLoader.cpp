@@ -46,6 +46,9 @@ void TextureLoader::loadTextures() {
     imgGreyRockDiffuse.initTexture("resources/textures/GreyRockDiffuse.png");
     imgGreyRockSpecular.initTexture("resources/textures/GreyRockSpecular.png");
     imgGreyRockNormal.initTexture("resources/textures/GreyRockNormal.png");
+    imgBlueCottonDiffuse.initTexture("resources/textures/BlueCottonDiffuse.png");
+    imgBlueCottonSpecular.initTexture("resources/textures/BlueCottonSpecular.png");
+    imgBlueCottonNormal.initTexture("resources/textures/BlueCottonNormal.png");
     
     // Ruby
     texRuby.diffuse   = imgRuby.getTexture();
@@ -137,6 +140,13 @@ void TextureLoader::loadTextures() {
     texGreyRock.emissive  = imgNoEmissive.getTexture();
     texGreyRock.normal    = imgGreyRockNormal.getTexture();
     texGreyRock.shininess = 5.0;
+
+    // Blue Cotton
+    texBlueCotton.diffuse   = imgBlueCottonDiffuse.getTexture();
+    texBlueCotton.specular  = imgBlueCottonSpecular.getTexture();
+    texBlueCotton.emissive  = imgNoEmissive.getTexture();
+    texBlueCotton.normal    = imgBlueCottonNormal.getTexture();
+    texBlueCotton.shininess = 200.0;
 }
 
 // Getters para cada tipo de textura
@@ -190,4 +200,8 @@ Textures TextureLoader::getWood() const {
 
 Textures TextureLoader::getGreyRock() const {
     return texGreyRock;
+}
+
+Textures TextureLoader::getBlueCotton() const {
+    return texBlueCotton;
 }

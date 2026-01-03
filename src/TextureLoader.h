@@ -41,6 +41,9 @@ private:
     Texture imgGreyRockDiffuse;
     Texture imgGreyRockSpecular;
     Texture imgGreyRockNormal;
+    Texture imgBlueCottonDiffuse;
+    Texture imgBlueCottonSpecular;
+    Texture imgBlueCottonNormal;
 
     // Structs Textures combinados
     Textures texRuby;
@@ -56,6 +59,7 @@ private:
     Textures texStoneWall;
     Textures texWood;
     Textures texGreyRock;
+    Textures texBlueCotton;
 
 public:
     // Constructor y Destructor
@@ -79,6 +83,7 @@ public:
     Textures getStoneWall() const;
     Textures getWood() const;
     Textures getGreyRock() const;
+    Textures getBlueCotton() const;
 };
 
 #endif /* TEXTURELOADER_H */

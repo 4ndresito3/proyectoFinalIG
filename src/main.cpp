@@ -229,7 +229,7 @@ void renderScene() {
   setLights(P,V);
 
  // Dibujamos la escena
-  drawMatrix(P,V);
+  //drawMatrix(P,V);
 
   glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
@@ -270,15 +270,7 @@ void renderScene() {
   glDepthMask(GL_FALSE);
   drawObjectMat(plane, materialLoader.getWall(), P, V, Ty * Tx * Rz * S);
   glDepthMask(GL_TRUE);
-  /*
-  
-  
-  glm::mat4 Rv = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0));
-  glm::mat4 Tv = glm::translate(I, glm::vec3(0.0, 0.0, 3.0));
-  glDepthMask(GL_FALSE);
-    drawObjectTex(plane, texWindow, P, V, Tv * Rv);
-  glDepthMask(GL_TRUE);
-  */
+ 
 }
 
 void setLights(glm::mat4 P, glm::mat4 V) {
@@ -365,6 +357,38 @@ void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   glm::mat4 S = glm::scale(I, glm::vec3(4.0f, 4.0f, 4.0f));
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0f, -2.1f, 0.0f)); 
   drawObjectTex(crystal2, textureLoader.getRuby(), P, V, M * Ty * S);
+
+}
+
+void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+  
+  glm::mat4 sMago = glm::scale    (I, glm::vec3(1.1, 0.75, 1));
+  glm::mat4 tMago = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
+  glm::mat4 M1 = tMago * sMago;
+  drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+  glm::mat4 sBrazos = glm::scale    (I, glm::vec3(0.3, 0.4, 0.3));
+  glm::mat4 rotBrazo1 = glm::rotate   (I, glm::radians(30.0f), glm::vec3(0,0,1));
+  glm::mat4 transBrazo1 = glm::translate(I, glm::vec3(0.95, -2.0, 0.0));
+  M1 = transBrazo1 * rotBrazo1 * sBrazos;
+  drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+  glm::mat4 rotBrazo2 = glm::rotate   (I, glm::radians(-30.0f), glm::vec3(0,0,1));
+  glm::mat4 transBrazo2 = glm::translate(I, glm::vec3(-0.95, -2.0, 0.0));
+  M1 = transBrazo2 * rotBrazo2 * sBrazos;
+  drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+  glm::mat4 sCabeza = glm::scale    (I, glm::vec3(0.45, 0.20, 0.49));
+  glm::mat4 tCabeza = glm::translate(I, glm::vec3(0.0, -0.50, 0.2));
+  glm::mat4 rCabeza = glm::rotate   (I, glm::radians(-80.0f), glm::vec3(1,0,0));
+  M1 = tCabeza * rCabeza * sCabeza;
+  drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+  glm::mat4 sCara = glm::scale    (I, glm::vec3(0.15, 0.10, 0.20));
+  glm::mat4 tCara = glm::translate(I, glm::vec3(0.0, -0.47, 0.2));
+  M1 = tCara * rCabeza * sCara;
+  drawObjectMat(sphere, materialLoader.getPage(), P, V, M * M1);
+  glm::mat4 R = glm::rotate   (I, glm::radians(-25.0f), glm::vec3(0,0,1));
+  glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
+  glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
+  glm::mat4 S = glm::scale    (I, glm::vec3(0.1, 0.1, 0.1));
+  drawObjectTex(staff, textureLoader.getStaff(), P, V, M * T * Ry * R  * S);
 
 }
 
@@ -519,32 +543,3 @@ void funTimer(double seconds, double &t0) {
   }
 }
 
-void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-  glm::mat4 sMago = glm::scale    (I, glm::vec3(1.1, 0.75, 1));
-  glm::mat4 tMago = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
-  glm::mat4 M1 = tMago * sMago;
-  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
-  glm::mat4 sBrazos = glm::scale    (I, glm::vec3(0.3, 0.4, 0.3));
-  glm::mat4 rotBrazo1 = glm::rotate   (I, glm::radians(30.0f), glm::vec3(0,0,1));
-  glm::mat4 transBrazo1 = glm::translate(I, glm::vec3(0.95, -2.0, 0.0));
-  M1 = transBrazo1 * rotBrazo1 * sBrazos;
-  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
-  glm::mat4 rotBrazo2 = glm::rotate   (I, glm::radians(-30.0f), glm::vec3(0,0,1));
-  glm::mat4 transBrazo2 = glm::translate(I, glm::vec3(-0.95, -2.0, 0.0));
-  M1 = transBrazo2 * rotBrazo2 * sBrazos;
-  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
-  glm::mat4 sCabeza = glm::scale    (I, glm::vec3(0.45, 0.20, 0.49));
-  glm::mat4 tCabeza = glm::translate(I, glm::vec3(0.0, -0.50, 0.2));
-  glm::mat4 rCabeza = glm::rotate   (I, glm::radians(-80.0f), glm::vec3(1,0,0));
-  M1 = tCabeza * rCabeza * sCabeza;
-  drawObjectMat(cone, materialLoader.getGold(), P, V, M * M1);
-  glm::mat4 sCara = glm::scale    (I, glm::vec3(0.15, 0.10, 0.20));
-  glm::mat4 tCara = glm::translate(I, glm::vec3(0.0, -0.47, 0.2));
-  M1 = tCara * rCabeza * sCara;
-  drawObjectMat(sphere, materialLoader.getGold(), P, V, M * M1);
-  glm::mat4 R = glm::rotate   (I, glm::radians(-25.0f), glm::vec3(0,0,1));
-  glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
-  glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
-  glm::mat4 S = glm::scale    (I, glm::vec3(0.1, 0.1, 0.1));
-  drawObjectTex(staff, textureLoader.getStaff(), P, V, M * T * Ry * R  * S);
-}
