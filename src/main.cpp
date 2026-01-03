@@ -58,9 +58,13 @@ void funTimer          (double seconds, double &t0);
   int h = 500;
 
 // Animaciones
+  bool controlBook = false;
   float desX = 0.0;
   float desY = 0.0;
   float desZ = 0.0;
+  float desXMage = 0.0;
+  float desZMage = 0.0;
+  float rotArmMage = 0.0;
   float rotZBook = 0.0;
   bool  rotZUp = true;
   float autoYBook = 1.0;
@@ -70,6 +74,7 @@ void funTimer          (double seconds, double &t0);
   float cameraMovX = 0.0;
   float cameraMovY = 0.0;
   float cameraMovZ = 0.0;
+
   //Mejorar rotacion camara
   bool firstMouse = true;
   double lastX, lastY;
@@ -260,7 +265,7 @@ void renderScene() {
   glm::mat4 Rfin = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
   drawBook(P, V, Tfin * Rfin, false);
 
-  glm::mat4 Mago = glm::translate(I, glm::vec3(0.0, 0.0, 0.0));
+  glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage));
   drawMago (P, V, Mago);
 
   S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
@@ -359,36 +364,46 @@ void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   drawObjectTex(crystal2, textureLoader.getRuby(), P, V, M * Ty * S);
 
 }
-
+  
 void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   
   glm::mat4 sMago = glm::scale    (I, glm::vec3(1.1, 0.75, 1));
   glm::mat4 tMago = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
   glm::mat4 M1 = tMago * sMago;
   drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+
   glm::mat4 sBrazos = glm::scale    (I, glm::vec3(0.3, 0.4, 0.3));
   glm::mat4 rotBrazo1 = glm::rotate   (I, glm::radians(30.0f), glm::vec3(0,0,1));
   glm::mat4 transBrazo1 = glm::translate(I, glm::vec3(0.95, -2.0, 0.0));
-  M1 = transBrazo1 * rotBrazo1 * sBrazos;
+  glm::mat4 rotBrazoManual = glm::rotate   (I, glm::radians(rotArmMage), glm::vec3(1,0,0));
+  glm::mat4 translate1 = glm::translate(I, glm::vec3(-0.8, 1.25, 0.0)); //para que rote en el hombro
+  glm::mat4 translate2 = glm::translate(I, glm::vec3(0.8, -1.25, 0.0));
+  M1 = translate2 * rotBrazoManual * translate1 * transBrazo1 * rotBrazo1 * sBrazos;
   drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+
   glm::mat4 rotBrazo2 = glm::rotate   (I, glm::radians(-30.0f), glm::vec3(0,0,1));
   glm::mat4 transBrazo2 = glm::translate(I, glm::vec3(-0.95, -2.0, 0.0));
   M1 = transBrazo2 * rotBrazo2 * sBrazos;
   drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+
   glm::mat4 sCabeza = glm::scale    (I, glm::vec3(0.45, 0.20, 0.49));
   glm::mat4 tCabeza = glm::translate(I, glm::vec3(0.0, -0.50, 0.2));
   glm::mat4 rCabeza = glm::rotate   (I, glm::radians(-80.0f), glm::vec3(1,0,0));
   M1 = tCabeza * rCabeza * sCabeza;
   drawObjectTex(cone, textureLoader.getBlueCotton(), P, V, M * M1);
+
   glm::mat4 sCara = glm::scale    (I, glm::vec3(0.15, 0.10, 0.20));
   glm::mat4 tCara = glm::translate(I, glm::vec3(0.0, -0.47, 0.2));
   M1 = tCara * rCabeza * sCara;
   drawObjectMat(sphere, materialLoader.getPage(), P, V, M * M1);
+
   glm::mat4 R = glm::rotate   (I, glm::radians(-25.0f), glm::vec3(0,0,1));
   glm::mat4 Ry = glm::rotate   (I, glm::radians(120.0f), glm::vec3(0,1,0));
   glm::mat4 T = glm::translate(I, glm::vec3(1.0, -0.9, 0.2));
   glm::mat4 S = glm::scale    (I, glm::vec3(0.1, 0.1, 0.1));
-  drawObjectTex(staff, textureLoader.getStaff(), P, V, M * T * Ry * R  * S);
+  glm::mat4 R1 = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0));
+  glm::mat4 T1 = glm::translate(I, glm::vec3(0.0, -1.0, 0.4));
+  drawObjectTex(staff, textureLoader.getStaff(), P, V, M * translate2 * rotBrazoManual * translate1 * T1 * T * R1 * Ry * R * S);
 
 }
 
@@ -429,33 +444,43 @@ void funFramebufferSize(GLFWwindow* window, int width, int height) {
 
 void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
   if (action == GLFW_RELEASE) return;
-  switch(key) {
-    case GLFW_KEY_LEFT:  desX -= 0.2f;   break;
-    case GLFW_KEY_RIGHT: desX += 0.2f;   break;
-    case GLFW_KEY_DOWN:  desY -= 0.2f;   break;
-    case GLFW_KEY_UP:    desY += 0.2f;   break;
-    case GLFW_KEY_Z:
-      if (mods == GLFW_MOD_SHIFT)
-        desZ -= 0.2f;   // Shift + Z
-      else
-        desZ += 0.2f;   // z
-      break;
-    case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
-    case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
-    case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
-    case GLFW_KEY_W:  cameraMovZ -= 0.2f;   break;
-    case GLFW_KEY_Q:  cameraMovY += 0.2f;   break;
-    case GLFW_KEY_E:  cameraMovY -= 0.2f;   break;
-    case GLFW_KEY_R:
-      desX = 0.0f;
-      desY = 0.0f;
-      desZ = 0.0f;
-      cameraMovX = 0.0f;
-      cameraMovY = 0.0f;
-      cameraMovZ = 0.0f;
-      break;   
-  }
-
+     switch(key) {
+      case GLFW_KEY_SPACE:  controlBook = !controlBook;  break;
+      case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
+      case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
+      case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
+      case GLFW_KEY_W:  cameraMovZ -= 0.2f;   break;
+      case GLFW_KEY_Q:  cameraMovY += 0.2f;   break;
+      case GLFW_KEY_E:  cameraMovY -= 0.2f;   break;
+      case GLFW_KEY_R:
+        desX = 0.0f;
+        desY = 0.0f;
+        desZ = 0.0f;
+        cameraMovX = 0.0f;
+        cameraMovY = 0.0f;
+        cameraMovZ = 0.0f;
+        break; 
+    }  
+    if (controlBook){
+      switch(key) {
+      case GLFW_KEY_LEFT:  desX -= 0.2f;   break;
+      case GLFW_KEY_RIGHT: desX += 0.2f;   break;
+      case GLFW_KEY_DOWN:  desY -= 0.2f;   break;
+      case GLFW_KEY_UP:    desY += 0.2f;   break;
+      case GLFW_KEY_Z:     desZ -= 0.2f;   break;
+      case GLFW_KEY_X:     desZ += 0.2f;   break;
+      }
+    }
+    else{
+      switch(key) {
+      case GLFW_KEY_LEFT:  desXMage -= 0.2f;   break;
+      case GLFW_KEY_RIGHT: desXMage += 0.2f;   break;
+      case GLFW_KEY_DOWN:  desZMage += 0.2f;   break;
+      case GLFW_KEY_UP:    desZMage -= 0.2f;   break;
+      case GLFW_KEY_Z:     rotArmMage -= 5.0f; break;
+      case GLFW_KEY_X:     rotArmMage += 5.0f; break;
+      }
+    }
 }
 
 void funScroll(GLFWwindow* window, double xoffset, double yoffset) {
