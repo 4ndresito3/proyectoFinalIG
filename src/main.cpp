@@ -13,7 +13,8 @@ void setLights (glm::mat4 P, glm::mat4 V);
 void drawMatrix(glm::mat4 P, glm::mat4 V);
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
 void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
+void drawAllCrystals(glm::mat4 P, glm::mat4 V);
 void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model &model, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
@@ -248,13 +249,9 @@ void renderScene() {
   glm::mat4 Tz = glm::translate(I, glm::vec3(0.0, 0.0, -8.0));
   drawObjectTex(plane, textureLoader.getStoneWall(), P, V, Tz * Ty * Rx * S);
 
-  glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 0.0, 3.0));
-  drawCrystal1(P, V, Tfin);
+  drawAllCrystals(P, V);
 
-  Tfin = glm::translate(I, glm::vec3(0.0, 0.0, -3.0));
-  drawCrystal1(P, V, Tfin);
-
-  Tfin = glm::translate(I, glm::vec3(2.0, 0.0, 3.0));
+  glm::mat4 Tfin = glm::translate(I, glm::vec3(2.0, 0.0, 3.0));
   drawCrystal2(P, V, Tfin);
 
   Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
@@ -265,8 +262,8 @@ void renderScene() {
   drawBook(P, V, Tfin, false);
 
   Tfin = glm::translate(I, glm::vec3(autoXBook + 1.0, autoYBook + 2.0, -3.0));
-  glm::mat4 Rfin = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
-  drawBook(P, V, Tfin * Rfin, false);
+  Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
+  drawBook(P, V, Tfin * Ry, false);
 
   glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage));
   Ry = glm::rotate   (I, glm::radians(mageLookAt), glm::vec3(0,1,0));
@@ -353,13 +350,46 @@ void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
   drawObjectTex(cylinder, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * Tx * Ry * Rz * S);
 }
 
-void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin) {
 
   glm::mat4 S = glm::scale(I, glm::vec3(3.0f, 3.0f, 3.0f));
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0f, -3.0f, 0.0f)); 
-  drawObjectTex(crystal1, textureLoader.getCrystal(), P, V, M * Ty * S);
+  drawObjectTex(crystal1, textureLoader.getCrystal(), P, V, Tfin * Ty * Ry * Sfin * S);
 
 }
+
+void drawAllCrystals(glm::mat4 P, glm::mat4 V) {
+
+    glm::mat4 Tfin = glm::translate(I, glm::vec3(-5.0, 0.0, -5.0));
+  glm::mat4 Sfin = glm::scale    (I, glm::vec3(3.0, 4.0, 3.0)); 
+  glm::mat4 Ry = glm::rotate     (I, glm::radians(45.0f), glm::vec3(0,1,0));
+  drawCrystal1(P, V, Tfin, Ry, Sfin);
+
+  Tfin = glm::translate(I, glm::vec3(-4.0, 0.0, -6.0));
+  Sfin = glm::scale    (I, glm::vec3(2.0, 3.0, 3.0)); 
+  Ry = glm::rotate     (I, glm::radians(90.0f), glm::vec3(0,1,0));
+  drawCrystal1(P, V, Tfin, Ry, Sfin);
+
+  Tfin = glm::translate(I, glm::vec3(-6.0, 0.0, -4.0));
+  Sfin = glm::scale    (I, glm::vec3(2.0, 2.75, 3.0)); 
+  Ry = glm::rotate     (I, glm::radians(-90.0f), glm::vec3(0,1,0));
+  drawCrystal1(P, V, Tfin, Ry, Sfin);
+
+  Tfin = glm::translate(I, glm::vec3(-6.1, 0.0, -6.3));
+  Sfin = glm::scale    (I, glm::vec3(4.3, 5.0, 4.3)); 
+  Ry = glm::rotate     (I, glm::radians(30.0f), glm::vec3(0,1,0));
+  drawCrystal1(P, V, Tfin, Ry, Sfin);
+
+  Tfin = glm::translate(I, glm::vec3(-7.0, 0.0, -3.5));
+  Sfin = glm::scale    (I, glm::vec3(1.5, 2, 1.5)); 
+  Ry = glm::rotate     (I, glm::radians(270.0f), glm::vec3(0,1,0));
+  drawCrystal1(P, V, Tfin, Ry, Sfin);
+
+  Tfin = glm::translate(I, glm::vec3(-3.5, 0.0, -7.2));
+  Sfin = glm::scale    (I, glm::vec3(1.5, 2, 1.5)); 
+  Ry = glm::rotate     (I, glm::radians(270.0f), glm::vec3(0,1,0));
+  drawCrystal1(P, V, Tfin, Ry, Sfin);
+} 
 
 void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 

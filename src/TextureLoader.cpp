@@ -111,7 +111,7 @@ void TextureLoader::loadTextures() {
     texCrystal.specular  = imgCrystalSpecular.getTexture();
     texCrystal.emissive  = imgCrystalEmissive.getTexture();
     texCrystal.normal    = imgCrystalNormal.getTexture();
-    texCrystal.shininess = 76.8;
+    texCrystal.shininess = 20.0;
 
     // Cover (Brown Leather)
     texCover.diffuse   = imgBrownLeatherDiffuse.getTexture();
@@ -146,7 +146,7 @@ void TextureLoader::loadTextures() {
     texBlueCotton.specular  = imgBlueCottonSpecular.getTexture();
     texBlueCotton.emissive  = imgNoEmissive.getTexture();
     texBlueCotton.normal    = imgBlueCottonNormal.getTexture();
-    texBlueCotton.shininess = 200.0;
+    texBlueCotton.shininess = 100.0;
 }
 
 // Getters para cada tipo de textura
