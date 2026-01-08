@@ -34,6 +34,10 @@ void TextureLoader::loadTextures() {
     imgCrystalSpecular.initTexture("resources/textures/imgCrystalSpecular.png");
     imgCrystalNormal.initTexture("resources/textures/imgCrystalNormal.png");
     imgCrystalEmissive.initTexture("resources/textures/imgCrystalEmissive.png");
+    imgCrystal2Diffuse.initTexture("resources/textures/imgCrystal2Diffuse.png");
+    imgCrystal2Specular.initTexture("resources/textures/imgCrystal2Specular.png");
+    imgCrystal2Normal.initTexture("resources/textures/imgCrystal2Normal.png");
+    imgCrystal2Emissive.initTexture("resources/textures/imgCrystal2Emissive.png");
     imgBrownLeatherDiffuse.initTexture("resources/textures/BrownLeatherDiffuse.png");
     imgBrownLeatherSpecular.initTexture("resources/textures/BrownLeatherSpecular.png");
     imgBrownLeatherNormal.initTexture("resources/textures/BrownLeatherNormal.png");
@@ -49,6 +53,9 @@ void TextureLoader::loadTextures() {
     imgBlueCottonDiffuse.initTexture("resources/textures/BlueCottonDiffuse.png");
     imgBlueCottonSpecular.initTexture("resources/textures/BlueCottonSpecular.png");
     imgBlueCottonNormal.initTexture("resources/textures/BlueCottonNormal.png");
+    imgBookshelfDiffuse.initTexture("resources/textures/BookshelfDiffuse.png");
+    imgBookshelfSpecular.initTexture("resources/textures/BookshelfSpecular.png");
+    imgBookshelfNormal.initTexture("resources/textures/BookshelfNormal.png");
     
     // Ruby
     texRuby.diffuse   = imgRuby.getTexture();
@@ -111,7 +118,14 @@ void TextureLoader::loadTextures() {
     texCrystal.specular  = imgCrystalSpecular.getTexture();
     texCrystal.emissive  = imgCrystalEmissive.getTexture();
     texCrystal.normal    = imgCrystalNormal.getTexture();
-    texCrystal.shininess = 76.8;
+    texCrystal.shininess = 20.0;
+
+    // Crystal2
+    texCrystal2.diffuse   = imgCrystal2Diffuse.getTexture();
+    texCrystal2.specular  = imgCrystal2Specular.getTexture();
+    texCrystal2.emissive  = imgCrystal2Emissive.getTexture();
+    texCrystal2.normal    = imgCrystal2Normal.getTexture();
+    texCrystal2.shininess = 20.0;
 
     // Cover (Brown Leather)
     texCover.diffuse   = imgBrownLeatherDiffuse.getTexture();
@@ -146,7 +160,14 @@ void TextureLoader::loadTextures() {
     texBlueCotton.specular  = imgBlueCottonSpecular.getTexture();
     texBlueCotton.emissive  = imgNoEmissive.getTexture();
     texBlueCotton.normal    = imgBlueCottonNormal.getTexture();
-    texBlueCotton.shininess = 200.0;
+    texBlueCotton.shininess = 100.0;
+
+    // Bookshelf
+    texBookshelf.diffuse   = imgBookshelfDiffuse.getTexture();
+    texBookshelf.specular  = imgBookshelfSpecular.getTexture();
+    texBookshelf.emissive  = imgNoEmissive.getTexture();
+    texBookshelf.normal    = imgBookshelfNormal.getTexture();
+    texBookshelf.shininess = 30.0;
 }
 
 // Getters para cada tipo de textura
@@ -186,6 +207,10 @@ Textures TextureLoader::getCrystal() const {
     return texCrystal;
 }
 
+Textures TextureLoader::getCrystal2() const {
+    return texCrystal2;
+}
+
 Textures TextureLoader::getCover() const {
     return texCover;
 }
@@ -204,4 +229,8 @@ Textures TextureLoader::getGreyRock() const {
 
 Textures TextureLoader::getBlueCotton() const {
     return texBlueCotton;
+}
+
+Textures TextureLoader::getBookshelf() const {
+    return texBookshelf;
 }

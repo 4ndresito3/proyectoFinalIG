@@ -29,6 +29,10 @@ private:
     Texture imgCrystalSpecular;
     Texture imgCrystalNormal;
     Texture imgCrystalEmissive;
+    Texture imgCrystal2Diffuse;
+    Texture imgCrystal2Specular;
+    Texture imgCrystal2Normal;
+    Texture imgCrystal2Emissive;
     Texture imgBrownLeatherDiffuse;
     Texture imgBrownLeatherSpecular;
     Texture imgBrownLeatherNormal;
@@ -44,6 +48,9 @@ private:
     Texture imgBlueCottonDiffuse;
     Texture imgBlueCottonSpecular;
     Texture imgBlueCottonNormal;
+    Texture imgBookshelfDiffuse;
+    Texture imgBookshelfSpecular;
+    Texture imgBookshelfNormal;
 
     // Structs Textures combinados
     Textures texRuby;
@@ -55,11 +62,13 @@ private:
     Textures texWall;
     Textures texStaff;
     Textures texCrystal;
+    Textures texCrystal2;
     Textures texCover;
     Textures texStoneWall;
     Textures texWood;
     Textures texGreyRock;
     Textures texBlueCotton;
+    Textures texBookshelf;
 
 public:
     // Constructor y Destructor
@@ -79,11 +88,13 @@ public:
     Textures getWall() const;
     Textures getStaff() const;
     Textures getCrystal() const;
+    Textures getCrystal2() const;
     Textures getCover() const;
     Textures getStoneWall() const;
     Textures getWood() const;
     Textures getGreyRock() const;
     Textures getBlueCotton() const;
+    Textures getBookshelf() const;
 };
 
 #endif /* TEXTURELOADER_H */
