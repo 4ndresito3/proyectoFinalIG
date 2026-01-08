@@ -12,10 +12,11 @@ void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
 void drawMatrix(glm::mat4 P, glm::mat4 V);
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
-void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
 void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
 void drawAllCrystals(glm::mat4 P, glm::mat4 V);
+void drawBookshelf(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectMat(Model &model, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model &model, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 
@@ -37,6 +38,7 @@ void funTimer          (double seconds, double &t0);
   Model cone;
   Model crystal1;
   Model crystal2;
+  Model bookshelf;
 
 // Imagenes (texturas)
   TextureLoader textureLoader; 
@@ -160,6 +162,7 @@ void configScene() {
   cone.initModel("resources/models/cone.obj");
   crystal1.initModel("resources/models/crystal1.obj");
   crystal2.initModel("resources/models/crystal2.obj");
+  bookshelf.initModel("resources/models/bookshelf.obj");
 
   // Imagenes (texturas)
   textureLoader.loadTextures();
@@ -265,6 +268,12 @@ void renderScene() {
   glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage));
   Ry = glm::rotate   (I, glm::radians(mageLookAt), glm::vec3(0,1,0));
   drawMago (P, V, Mago * Ry);
+
+  Tfin = glm::translate(I, glm::vec3(-1.8, 0.0, -7.0));
+  drawBookshelf(P, V, Tfin);
+
+  Tfin = glm::translate(I, glm::vec3(1.8, 0.0, -7.0));
+  drawBookshelf(P, V, Tfin);
 
   S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado || pared transparente
@@ -425,6 +434,15 @@ void drawAllCrystals(glm::mat4 P, glm::mat4 V) {
   Ry = glm::rotate     (I, glm::radians(-270.0f), glm::vec3(0,1,0));
   drawCrystal2(P, V, Tfin, Ry, Sfin);
 } 
+
+void drawBookshelf(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+
+  glm::mat4 S = glm::scale     (I, glm::vec3(4.5, 3.5, 3.0));
+  glm::mat4 Ry = glm::rotate   (I, glm::radians(180.0f), glm::vec3(0,1,0));
+  glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, -3.0, 0.0));
+  drawObjectTex(bookshelf, textureLoader.getBookshelf(), P, V, M * Ty * Ry * S);
+
+}
   
 void drawMago(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
   

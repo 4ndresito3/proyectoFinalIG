@@ -53,6 +53,9 @@ void TextureLoader::loadTextures() {
     imgBlueCottonDiffuse.initTexture("resources/textures/BlueCottonDiffuse.png");
     imgBlueCottonSpecular.initTexture("resources/textures/BlueCottonSpecular.png");
     imgBlueCottonNormal.initTexture("resources/textures/BlueCottonNormal.png");
+    imgBookshelfDiffuse.initTexture("resources/textures/BookshelfDiffuse.png");
+    imgBookshelfSpecular.initTexture("resources/textures/BookshelfSpecular.png");
+    imgBookshelfNormal.initTexture("resources/textures/BookshelfNormal.png");
     
     // Ruby
     texRuby.diffuse   = imgRuby.getTexture();
@@ -158,6 +161,13 @@ void TextureLoader::loadTextures() {
     texBlueCotton.emissive  = imgNoEmissive.getTexture();
     texBlueCotton.normal    = imgBlueCottonNormal.getTexture();
     texBlueCotton.shininess = 100.0;
+
+    // Bookshelf
+    texBookshelf.diffuse   = imgBookshelfDiffuse.getTexture();
+    texBookshelf.specular  = imgBookshelfSpecular.getTexture();
+    texBookshelf.emissive  = imgNoEmissive.getTexture();
+    texBookshelf.normal    = imgBookshelfNormal.getTexture();
+    texBookshelf.shininess = 30.0;
 }
 
 // Getters para cada tipo de textura
@@ -219,4 +229,8 @@ Textures TextureLoader::getGreyRock() const {
 
 Textures TextureLoader::getBlueCotton() const {
     return texBlueCotton;
+}
+
+Textures TextureLoader::getBookshelf() const {
+    return texBookshelf;
 }
