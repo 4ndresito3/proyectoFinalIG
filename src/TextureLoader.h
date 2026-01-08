@@ -29,6 +29,10 @@ private:
     Texture imgCrystalSpecular;
     Texture imgCrystalNormal;
     Texture imgCrystalEmissive;
+    Texture imgCrystal2Diffuse;
+    Texture imgCrystal2Specular;
+    Texture imgCrystal2Normal;
+    Texture imgCrystal2Emissive;
     Texture imgBrownLeatherDiffuse;
     Texture imgBrownLeatherSpecular;
     Texture imgBrownLeatherNormal;
@@ -55,6 +59,7 @@ private:
     Textures texWall;
     Textures texStaff;
     Textures texCrystal;
+    Textures texCrystal2;
     Textures texCover;
     Textures texStoneWall;
     Textures texWood;
@@ -79,6 +84,7 @@ public:
     Textures getWall() const;
     Textures getStaff() const;
     Textures getCrystal() const;
+    Textures getCrystal2() const;
     Textures getCover() const;
     Textures getStoneWall() const;
     Textures getWood() const;

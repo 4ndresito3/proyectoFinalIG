@@ -34,6 +34,10 @@ void TextureLoader::loadTextures() {
     imgCrystalSpecular.initTexture("resources/textures/imgCrystalSpecular.png");
     imgCrystalNormal.initTexture("resources/textures/imgCrystalNormal.png");
     imgCrystalEmissive.initTexture("resources/textures/imgCrystalEmissive.png");
+    imgCrystal2Diffuse.initTexture("resources/textures/imgCrystal2Diffuse.png");
+    imgCrystal2Specular.initTexture("resources/textures/imgCrystal2Specular.png");
+    imgCrystal2Normal.initTexture("resources/textures/imgCrystal2Normal.png");
+    imgCrystal2Emissive.initTexture("resources/textures/imgCrystal2Emissive.png");
     imgBrownLeatherDiffuse.initTexture("resources/textures/BrownLeatherDiffuse.png");
     imgBrownLeatherSpecular.initTexture("resources/textures/BrownLeatherSpecular.png");
     imgBrownLeatherNormal.initTexture("resources/textures/BrownLeatherNormal.png");
@@ -113,6 +117,13 @@ void TextureLoader::loadTextures() {
     texCrystal.normal    = imgCrystalNormal.getTexture();
     texCrystal.shininess = 20.0;
 
+    // Crystal2
+    texCrystal2.diffuse   = imgCrystal2Diffuse.getTexture();
+    texCrystal2.specular  = imgCrystal2Specular.getTexture();
+    texCrystal2.emissive  = imgCrystal2Emissive.getTexture();
+    texCrystal2.normal    = imgCrystal2Normal.getTexture();
+    texCrystal2.shininess = 20.0;
+
     // Cover (Brown Leather)
     texCover.diffuse   = imgBrownLeatherDiffuse.getTexture();
     texCover.specular  = imgBrownLeatherSpecular.getTexture();
@@ -184,6 +195,10 @@ Textures TextureLoader::getStaff() const {
 
 Textures TextureLoader::getCrystal() const {
     return texCrystal;
+}
+
+Textures TextureLoader::getCrystal2() const {
+    return texCrystal2;
 }
 
 Textures TextureLoader::getCover() const {
