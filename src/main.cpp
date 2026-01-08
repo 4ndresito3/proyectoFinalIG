@@ -6,6 +6,7 @@
 #include "Texture.h"
 #include "TextureLoader.h"
 #include "MaterialLoader.h"
+#include "LightsManager.h"
 
 void configScene();
 void renderScene();
@@ -37,18 +38,11 @@ void funTimer          (double seconds, double &t0);
   Model crystal1;
   Model crystal2;
 
-// Imagenes (texturas)
+// Loaders/Managers
   TextureLoader textureLoader; 
   MaterialLoader materialLoader;
+  LightsManager lightsManager;
 
-// Luces y materiales
-  #define   NLD 1
-  #define   NLP 1
-  #define   NLF 2
-  Light     lightG;
-  Light     lightD[NLD];
-  Light     lightP[NLP];
-  Light     lightF[NLF];
   Material  mluz;
   Material  ruby;
   Material  gold;
@@ -59,6 +53,7 @@ void funTimer          (double seconds, double &t0);
 
 // Animaciones
   bool controlBook = false;
+  bool controlLight = false;
   float desX = 0.0;
   float desY = 0.0;
   float desZ = 0.0;
@@ -86,6 +81,9 @@ void funTimer          (double seconds, double &t0);
   float fovy   = 80.0;
   float alphaX =  0.0;
   float alphaY =  0.0;
+
+// Control de luz direccional (sol)
+  float sunAngle = 0.0f;
 
 int main() {
 
@@ -166,45 +164,9 @@ void configScene() {
   // Cargar materiales
   materialLoader.loadMaterials();
 
-// Luz ambiental global
-  lightG.ambient = glm::vec3(0.5, 0.5, 0.5);
+  // Cargar luces
+  // lightsManager = LightsManager();
 
-// Luces direccionales
-  lightD[0].direction = glm::vec3(-1.0, 0.0, 0.0);
-  lightD[0].ambient   = glm::vec3( 0.1, 0.1, 0.1);
-  lightD[0].diffuse   = glm::vec3( 0.7, 0.7, 0.7);
-  lightD[0].specular  = glm::vec3( 0.7, 0.7, 0.7);
-
-// Luces posicionales
-  lightP[0].position    = glm::vec3(0.0, 3.0, 3.0);
-  lightP[0].ambient     = glm::vec3(0.2, 0.2, 0.2);
-  lightP[0].diffuse     = glm::vec3(0.9, 0.9, 0.9);
-  lightP[0].specular    = glm::vec3(0.9, 0.9, 0.9);
-  lightP[0].c0          = 1.00;
-  lightP[0].c1          = 0.22;
-  lightP[0].c2          = 0.20;
-
-// Luces focales
-  lightF[0].position    = glm::vec3(-2.0,  2.0,  5.0);
-  lightF[0].direction   = glm::vec3( 2.0, -2.0, -5.0);
-  lightF[0].ambient     = glm::vec3( 0.2,  0.2,  0.2);
-  lightF[0].diffuse     = glm::vec3( 0.9,  0.9,  0.9);
-  lightF[0].specular    = glm::vec3( 0.9,  0.9,  0.9);
-  lightF[0].innerCutOff = 10.0;
-  lightF[0].outerCutOff = lightF[0].innerCutOff + 5.0;
-  lightF[0].c0          = 1.000;
-  lightF[0].c1          = 0.090;
-  lightF[0].c2          = 0.032;
-  lightF[1].position    = glm::vec3( 2.0,  2.0,  5.0);
-  lightF[1].direction   = glm::vec3(-2.0, -2.0, -5.0);
-  lightF[1].ambient     = glm::vec3( 0.2,  0.2,  0.2);
-  lightF[1].diffuse     = glm::vec3( 0.9,  0.9,  0.9);
-  lightF[1].specular    = glm::vec3( 0.9,  0.9,  0.9);
-  lightF[1].innerCutOff = 5.0;
-  lightF[1].outerCutOff = lightF[1].innerCutOff + 1.0;
-  lightF[1].c0          = 1.000;
-  lightF[1].c1          = 0.090;
-  lightF[1].c2          = 0.032;
 }
 
 void renderScene() {
@@ -231,6 +193,14 @@ void renderScene() {
   glm::vec3 up    (0.0, 1.0, 0.0);
   glm::mat4 V = glm::lookAt(eye, center, up);
   shaders.setVec3("ueye",eye);
+
+ // Actualizamos la luz de cámara (linterna) con la posición y dirección de la cámara
+  glm::vec3 cameraDirection = glm::normalize(center - eye);
+  lightsManager.updateCameraLight(eye, cameraDirection);
+
+ // Actualizamos la dirección del sol según sunAngle
+  glm::vec3 sunDirection = glm::vec3(glm::cos(glm::radians(sunAngle)), -0.5f, glm::sin(glm::radians(sunAngle)));
+  lightsManager.setLightDDirection(0, sunDirection);
 
  // Fijamos las luces
   setLights(P,V);
@@ -284,18 +254,18 @@ void renderScene() {
 
 void setLights(glm::mat4 P, glm::mat4 V) {
 
-  shaders.setLight("ulightG",lightG);
-  for(int i=0; i<NLD; i++) shaders.setLight("ulightD["+toString(i)+"]",lightD[i]);
-  for(int i=0; i<NLP; i++) shaders.setLight("ulightP["+toString(i)+"]",lightP[i]);
-  for(int i=0; i<NLF; i++) shaders.setLight("ulightF["+toString(i)+"]",lightF[i]);
+  shaders.setLight("ulightG",lightsManager.getLightG());
+  for(int i=0; i<lightsManager.getNumLightD(); i++) shaders.setLight("ulightD["+toString(i)+"]",lightsManager.getLightD(i));
+  for(int i=0; i<lightsManager.getNumLightP(); i++) shaders.setLight("ulightP["+toString(i)+"]",lightsManager.getLightP(i));
+  for(int i=0; i<lightsManager.getNumLightF(); i++) shaders.setLight("ulightF["+toString(i)+"]",lightsManager.getLightF(i));
 
-  for(int i=0; i<NLP; i++) {
-    glm::mat4 M = glm::translate(I,lightP[i].position) * glm::scale(I,glm::vec3(0.1));
+  for(int i=0; i<lightsManager.getNumLightP(); i++) {
+    glm::mat4 M = glm::translate(I,lightsManager.getLightP(i).position) * glm::scale(I,glm::vec3(0.1));
     drawObjectMat(sphere, materialLoader.getMluz(), P, V, M);
   }
 
-  for(int i=0; i<NLF; i++) {
-    glm::mat4 M = glm::translate(I,lightF[i].position) * glm::scale(I,glm::vec3(0.025));
+  for(int i=0; i<lightsManager.getNumLightF(); i++) {
+    glm::mat4 M = glm::translate(I,lightsManager.getLightF(i).position) * glm::scale(I,glm::vec3(0.025));
     drawObjectMat(sphere, materialLoader.getMluz(), P, V, M);
   }
 
@@ -448,8 +418,9 @@ void funFramebufferSize(GLFWwindow* window, int width, int height) {
 
 void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
   if (action == GLFW_RELEASE) return;
-     switch(key) {
-      case GLFW_KEY_SPACE:  controlBook = !controlBook;  break;
+    switch(key) {
+      case GLFW_KEY_SPACE:  if (mods == GLFW_MOD_SHIFT) controlLight = !controlLight;
+                            else controlBook = !controlBook;  break;
       case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
       case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
       case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
@@ -463,7 +434,11 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
         cameraMovX = 0.0f;
         cameraMovY = 0.0f;
         cameraMovZ = 0.0f;
-        break; 
+        sunAngle = 0.0f;
+        break;
+      // Control del sol (luz direccional)
+      case GLFW_KEY_O:  sunAngle -= 5.0f;  break;
+      case GLFW_KEY_P:  sunAngle += 5.0f;  break;
     }  
     if (controlBook){
       switch(key) {
@@ -487,7 +462,7 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       case GLFW_KEY_Z:  desY += 0.2f;   break;
       }
     }
-    else{
+    if (!controlBook){
       switch(key) {
       case GLFW_KEY_LEFT:  
         desXMage -= 0.2f;
@@ -509,6 +484,7 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       case GLFW_KEY_X:     rotArmMage += 5.0f; if(rotArmMage > 60.0f)  rotArmMage = 20.0f;  break;
       }
     }
+
 }
 
 void funScroll(GLFWwindow* window, double xoffset, double yoffset) {
