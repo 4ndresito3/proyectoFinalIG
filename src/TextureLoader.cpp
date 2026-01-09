@@ -178,6 +178,7 @@ void TextureLoader::loadTextures() {
     texRug.emissive  = imgNoEmissive.getTexture();
     texRug.normal    = imgRugNormal.getTexture();
     texRug.shininess = 10.0;
+
 }
 
 // Getters para cada tipo de textura

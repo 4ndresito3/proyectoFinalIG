@@ -40,6 +40,7 @@ void funTimer          (double seconds, double &t0);
   Model crystal1;
   Model crystal2;
   Model bookshelf;
+  Model table;
 
 // Loaders/Managers
   TextureLoader textureLoader; 
@@ -162,6 +163,7 @@ void configScene() {
   crystal1.initModel("resources/models/crystal1.obj");
   crystal2.initModel("resources/models/crystal2.obj");
   bookshelf.initModel("resources/models/bookshelf.obj");
+  table.initModel("resources/models/table.obj");
 
   // Imagenes (texturas)
   textureLoader.loadTextures();
@@ -247,6 +249,11 @@ void renderScene() {
   S = glm::scale       (I, glm::vec3(4.0, 1.0, 3.0)); //alfombra
   Tfin = glm::translate(I, glm::vec3(0.0, -2.99, 2.2));
   drawObjectTex(plane, textureLoader.getRug(), P, V, Tfin * S);
+
+  S = glm::scale       (I, glm::vec3(0.03, 0.03, 0.03)); //mesa
+  Ry = glm::rotate     (I, glm::radians(90.0f), glm::vec3(0,1,0));
+  Tfin = glm::translate(I, glm::vec3(-6.0, -3.0, 0.0));
+  drawObjectTex(table, textureLoader.getWood(), P, V, Tfin * Ry * S);
 
   S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado || pared transparente
