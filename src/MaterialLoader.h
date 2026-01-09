@@ -7,7 +7,9 @@ class MaterialLoader {
 private:
     Material mluz;
     Material ruby;
+    Material rubyAlpha;
     Material gold;
+    Material goldAlpha;
     Material page;
     Material wall;
 
@@ -19,7 +21,9 @@ public:
 
     Material getMluz() const;
     Material getRuby() const;
+    Material getRubyAlpha() const;
     Material getGold() const;
+    Material getGoldAlpha() const;
     Material getPage() const;
     Material getWall() const;
 };

@@ -58,26 +58,29 @@ void funTimer          (double seconds, double &t0);
 // Animaciones
   bool controlBook = false;
   bool controlLight = false;
-  float desX = 0.0;
+  float desX = 0.0; // desplazamiento libro
   float desY = 0.0;
   float desZ = 0.0;
-  float desXMage = 0.0;
+  float desXMage = 0.0; // desplazamiento mago
   float desZMage = 0.0;
   float rotArmMage = 0.0;
   float mageLookAt = 0.0;
   float rotZBook = 0.0;
-  bool  rotZUp = true;
+  bool  rotZUp = true; // para animar libro
   float autoYBook = 1.0;
-  bool  autoYUp = true;
+  bool  autoYUp = true; // para animar libro
   float autoXBook = 0.0;
-  bool  autoXleft = true;
+  bool  autoXleft = true; // para animar libro
   float bookLookAt = 0.0;
-  bool  showBook = false;
+  bool  showBook = false; // dibujar libro que controlas
   bool  bookPlaced = false; 
   float cameraMovX = 0.0;
   float cameraMovY = 0.0;
   float cameraMovZ = 0.0;
   bool  hechizoLanzado = false;
+  float outOfCamera1 = 0.0; // "parpadeo" hechizo
+  float outOfCamera2 = 0.0;
+  int outOfCameraTimer = 0;
 
   //Mejorar rotacion camara
   bool firstMouse = true;
@@ -228,27 +231,27 @@ void renderScene() {
 
   drawAllCrystals(P, V);
 
-  if(showBook) {
-    glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 2.3, -6.5));
+  if(showBook) { 
+    glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 2.3, -6.5)); //libro que controlas
     glm::mat4 Ry = glm::rotate   (I, glm::radians(bookLookAt), glm::vec3(0,1,0));
     drawBook(P, V, Tfin * Ry, true, false);
   }
   if(bookPlaced) {
-    glm::mat4 Tfin = glm::translate(I, glm::vec3(-5.8, -1.0, 0.4));
+    glm::mat4 Tfin = glm::translate(I, glm::vec3(-5.8, -1.0, 0.4)); //libro colocado en mesa
     glm::mat4 Ry = glm::rotate     (I, glm::radians(90.0f), glm::vec3(0,1,0));
     drawBook(P, V, Tfin * Ry, false, true);
   }
-  glm::mat4 Tfin = glm::translate(I, glm::vec3(3.0, autoYBook + 0.5, 3.0));
+  glm::mat4 Tfin = glm::translate(I, glm::vec3(3.0, autoYBook + 0.5, 3.0)); //libros automaticos animados
   drawBook(P, V, Tfin, false, false);
   Tfin = glm::translate(I, glm::vec3(autoXBook + 3.0, autoYBook + 2.0, -2.0));
   glm::mat4 Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
   drawBook(P, V, Tfin * Ry, false, false);
 
-  glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage));
+  glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage)); //mago
   Ry = glm::rotate   (I, glm::radians(mageLookAt), glm::vec3(0,1,0));
   drawMago (P, V, Mago * Ry);
 
-  Tfin = glm::translate(I, glm::vec3(-1.8, 0.0, -7.0));
+  Tfin = glm::translate(I, glm::vec3(-1.8, 0.0, -7.0)); //librerias
   drawBookshelf(P, V, Tfin);
   Tfin = glm::translate(I, glm::vec3(1.8, 0.0, -7.0));
   drawBookshelf(P, V, Tfin);
@@ -261,6 +264,20 @@ void renderScene() {
   Ry = glm::rotate     (I, glm::radians(90.0f), glm::vec3(0,1,0));
   Tfin = glm::translate(I, glm::vec3(-6.0, -3.0, 0.0));
   drawObjectTex(table, textureLoader.getWood(), P, V, Tfin * Ry * S);
+
+  if(hechizoLanzado){
+    S = glm::scale       (I, glm::vec3(0.2, 0.2, 0.2)); //esfera ruby semitransparente en camara tras hechizo
+    T = glm::translate   (I, glm::vec3(2.0 + x + cameraMovX, 2.0 + y + cameraMovY + outOfCamera1, z + cameraMovZ));
+    glDepthMask(GL_FALSE);
+    drawObjectMat(sphere, materialLoader.getRubyAlpha(), P, V, T * S);
+    glDepthMask(GL_TRUE);
+
+    S = glm::scale       (I, glm::vec3(0.2, 0.2, 0.2)); //esfera gold semitransparente en camara tras hechizo
+    T = glm::translate   (I, glm::vec3(2.0 + x + cameraMovX, 2.0 + y + cameraMovY + outOfCamera2, z + cameraMovZ));
+    glDepthMask(GL_FALSE);
+    drawObjectMat(sphere, materialLoader.getGoldAlpha(), P, V, T * S);
+    glDepthMask(GL_TRUE);
+  }
 
   S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado || pared transparente
@@ -513,12 +530,12 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
     switch(key) {
       case GLFW_KEY_SPACE:  
         if (mods == GLFW_MOD_SHIFT) controlLight = !controlLight;
-          else{
-            if(!bookPlaced){
-              showBook = true;
-              controlBook = !controlBook;
-            }
+        else{
+          if(!bookPlaced){
+            showBook = true;
+            controlBook = !controlBook;
           }
+        }
         break;
       case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
       case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
@@ -538,24 +555,28 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       // Control del sol (luz direccional)
       case GLFW_KEY_O:  sunAngle -= 5.0f;  break;
       case GLFW_KEY_P:  sunAngle += 5.0f;  break;
-      case GLFW_KEY_K:  
-        if(!bookPlaced){
-          if(desX < -3.0f && desZ > 5.8f && desZ < 7.6f && desY < -2.5f && controlBook){
-            bookPlaced = true;
-            showBook = false;
-            controlBook = false;
+      case GLFW_KEY_K:  //interactuar con mesa y lanzar hechizo
+        if(!hechizoLanzado){
+          if(!bookPlaced){
+            if(desX < -3.0f && desZ > 5.8f && desZ < 7.6f && desY < -2.5f && controlBook){
+              bookPlaced = true;
+              showBook = false;
+              controlBook = false;
+            }
+            else{
+              std::cout << "Trata de colocar el libro encima de la mesa y prueba de nuevo" << std::endl;
+            }
           }
           else{
-            std::cout << "Trata de colocar el libro encima de la mesa y prueba de nuevo" << std::endl;
+            if(desXMage > -5.0f && desXMage < -3.0f && desZMage > -1.0f && desZMage < 1.0f && rotArmMage == -90.0f && mageLookAt == 270.0f){
+              hechizoLanzado = true;
+            }
+            else{
+              std::cout << "Trata de acercar el mago a la mesa con el libro colocado y levanta el baston" << std::endl;
+            }
           }
-        }
-        else{
-          if(desXMage > -5.0f && desXMage < -3.0f && desZMage > -1.0f && desZMage < 1.0f && rotArmMage == -90.0f && mageLookAt == 270.0f){
-            hechizoLanzado = true;
-          }
-          else{
-            std::cout << "Trata de acercar el mago a la mesa con el libro colocado " << std::endl;
-          }
+        }else{
+          hechizoLanzado = false;
         }
       break;
     }  
@@ -699,6 +720,19 @@ void funTimer(double seconds, double &t0) {
       if(autoXBook >= 2.0f) {
         autoXBook = 2.0f;
         autoXleft = true;
+      }
+    }
+    if(hechizoLanzado){ //parpadeo de pantalla al lanzar hechizo
+      outOfCameraTimer += 1; 
+      if(outOfCamera1 == 0.0f && outOfCameraTimer > 4){    
+        outOfCamera1 = 100.f;
+        outOfCamera2 = 0.0f;
+        outOfCameraTimer = 0;
+      } 
+      if(outOfCamera1 == 100.0f && outOfCameraTimer > 4){    
+        outOfCamera1 = 0.0f;
+        outOfCamera2 = 100.0f;
+        outOfCameraTimer = 0;
       }
     }
     t0 = t1;
