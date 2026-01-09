@@ -215,7 +215,6 @@ void renderScene() {
   glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
   drawObjectTex(plane, textureLoader.getGreyRock(), P, V, T * S);
-
   S = glm::scale               (I, glm::vec3(8.0, 1.0, 4.0));
   glm::mat4 Rx = glm::rotate   (I, glm::radians(90.0f), glm::vec3(1,0,0)); //fondo de atras
   glm::mat4 Ty = glm::translate(I, glm::vec3(0.0, 1.0, 0.0));
@@ -227,10 +226,8 @@ void renderScene() {
   glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
   glm::mat4 Ry = glm::rotate   (I, glm::radians(bookLookAt), glm::vec3(0,1,0));
   drawBook(P, V, Tfin * Ry, true);
-
   Tfin = glm::translate(I, glm::vec3(3.0, autoYBook, 2.0));
   drawBook(P, V, Tfin, false);
-
   Tfin = glm::translate(I, glm::vec3(autoXBook + 1.0, autoYBook + 2.0, -3.0));
   Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
   drawBook(P, V, Tfin * Ry, false);
@@ -241,9 +238,12 @@ void renderScene() {
 
   Tfin = glm::translate(I, glm::vec3(-1.8, 0.0, -7.0));
   drawBookshelf(P, V, Tfin);
-
   Tfin = glm::translate(I, glm::vec3(1.8, 0.0, -7.0));
   drawBookshelf(P, V, Tfin);
+
+  S = glm::scale       (I, glm::vec3(4.0, 1.0, 3.0)); //alfombra
+  Tfin = glm::translate(I, glm::vec3(0.0, -2.99, 2.2));
+  drawObjectTex(plane, textureLoader.getRug(), P, V, Tfin * S);
 
   S = glm::scale               (I, glm::vec3(4.0, 1.0, 8.0));
   glm::mat4 Rz = glm::rotate   (I, glm::radians(90.0f), glm::vec3(0,0,1)); //fondo del lado || pared transparente

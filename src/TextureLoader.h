@@ -51,6 +51,9 @@ private:
     Texture imgBookshelfDiffuse;
     Texture imgBookshelfSpecular;
     Texture imgBookshelfNormal;
+    Texture imgRugDiffuse;
+    Texture imgRugSpecular;
+    Texture imgRugNormal;
 
     // Structs Textures combinados
     Textures texRuby;
@@ -69,6 +72,7 @@ private:
     Textures texGreyRock;
     Textures texBlueCotton;
     Textures texBookshelf;
+    Textures texRug;
 
 public:
     // Constructor y Destructor
@@ -95,6 +99,7 @@ public:
     Textures getGreyRock() const;
     Textures getBlueCotton() const;
     Textures getBookshelf() const;
+    Textures getRug() const;
 };
 
 #endif /* TEXTURELOADER_H */
