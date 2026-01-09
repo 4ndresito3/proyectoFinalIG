@@ -77,6 +77,7 @@ void funTimer          (double seconds, double &t0);
   float cameraMovX = 0.0;
   float cameraMovY = 0.0;
   float cameraMovZ = 0.0;
+  bool  hechizoLanzado = false;
 
   //Mejorar rotacion camara
   bool firstMouse = true;
@@ -538,15 +539,24 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       case GLFW_KEY_O:  sunAngle -= 5.0f;  break;
       case GLFW_KEY_P:  sunAngle += 5.0f;  break;
       case GLFW_KEY_K:  
+        if(!bookPlaced){
           if(desX < -3.0f && desZ > 5.8f && desZ < 7.6f && desY < -2.5f && controlBook){
             bookPlaced = true;
             showBook = false;
             controlBook = false;
           }
           else{
-            std::cout << "No se cumplen las condiciones para colocar el libro" 
-            << " " << desX << " " << desY << " " << desZ << std::endl;
+            std::cout << "Trata de colocar el libro encima de la mesa y prueba de nuevo" << std::endl;
           }
+        }
+        else{
+          if(desXMage > -5.0f && desXMage < -3.0f && desZMage > -1.0f && desZMage < 1.0f && rotArmMage == -90.0f && mageLookAt == 270.0f){
+            hechizoLanzado = true;
+          }
+          else{
+            std::cout << "Trata de acercar el mago a la mesa con el libro colocado " << std::endl;
+          }
+        }
       break;
     }  
     if (controlBook){
