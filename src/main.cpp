@@ -60,7 +60,6 @@ void funTimer          (double seconds, double &t0);
   float desX = 0.0;
   float desY = 0.0;
   float desZ = 0.0;
-  float bookLookAt = 0.0;
   float desXMage = 0.0;
   float desZMage = 0.0;
   float rotArmMage = 0.0;
@@ -71,6 +70,8 @@ void funTimer          (double seconds, double &t0);
   bool  autoYUp = true;
   float autoXBook = 0.0;
   bool  autoXleft = true;
+  float bookLookAt = 0.0;
+  bool showBook = false;
   float cameraMovX = 0.0;
   float cameraMovY = 0.0;
   float cameraMovZ = 0.0;
@@ -223,13 +224,15 @@ void renderScene() {
 
   drawAllCrystals(P, V);
 
-  glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 1.0, -3.0));
-  glm::mat4 Ry = glm::rotate   (I, glm::radians(bookLookAt), glm::vec3(0,1,0));
-  drawBook(P, V, Tfin * Ry, true);
-  Tfin = glm::translate(I, glm::vec3(3.0, autoYBook, 2.0));
+  if(showBook) {
+    glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 2.3, -6.5));
+    glm::mat4 Ry = glm::rotate   (I, glm::radians(bookLookAt), glm::vec3(0,1,0));
+    drawBook(P, V, Tfin * Ry, true);
+  }
+  glm::mat4 Tfin = glm::translate(I, glm::vec3(-4.0, autoYBook + 1.0, 4.0));
   drawBook(P, V, Tfin, false);
-  Tfin = glm::translate(I, glm::vec3(autoXBook + 1.0, autoYBook + 2.0, -3.0));
-  Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
+  Tfin = glm::translate(I, glm::vec3(autoXBook + 3.0, autoYBook + 2.0, -2.0));
+  glm::mat4 Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
   drawBook(P, V, Tfin * Ry, false);
 
   glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage));
@@ -495,7 +498,11 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
   if (action == GLFW_RELEASE) return;
     switch(key) {
       case GLFW_KEY_SPACE:  if (mods == GLFW_MOD_SHIFT) controlLight = !controlLight;
-                            else controlBook = !controlBook;  break;
+                            else{
+                              showBook = true;
+                              controlBook = !controlBook;                              
+                              break;
+                            }
       case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
       case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
       case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
@@ -518,41 +525,55 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
     if (controlBook){
       switch(key) {
       case GLFW_KEY_LEFT:  
-        desX -= 0.2f;   
+        desX -= 0.2f; 
+        if(desX < -4.5f) desX = -4.5f;
         bookLookAt = 90.0f;
         break;
       case GLFW_KEY_RIGHT: 
         desX += 0.2f;   
+        if(desX > 8.5f) desX = 8.5f;
         bookLookAt = 90.0f;
         break;
       case GLFW_KEY_UP:     
         desZ -= 0.2f;  
+        if(desZ < 0.0f) desZ = 0.0f;
         bookLookAt = 0.0f; 
       break;
       case GLFW_KEY_DOWN:   
         desZ += 0.2f;  
+        if(desZ > 12.5f) desZ = 12.5f;
         bookLookAt = 0.0f;   
         break;    
-      case GLFW_KEY_X:  desY -= 0.2f;   break;
-      case GLFW_KEY_Z:  desY += 0.2f;   break;
+      case GLFW_KEY_X:  
+        desY -= 0.2f;  
+        if(desY < -4.0f) desY = -4.0f;
+        break;
+      case GLFW_KEY_Z:  
+        desY += 0.2f; 
+        if(desY > 2.0f) desY = 2.0f;  
+        break;
       }
     }
     if (!controlBook){
       switch(key) {
       case GLFW_KEY_LEFT:  
         desXMage -= 0.2f;
+        if(desXMage < -6.0f) desXMage = -6.0f;
         mageLookAt = 270.0f;
         break;
       case GLFW_KEY_RIGHT: 
         desXMage += 0.2f;  
+        if(desXMage > 6.0f) desXMage = 6.0f;
         mageLookAt = 90.0f;
         break;
       case GLFW_KEY_DOWN:  
         desZMage += 0.2f; 
+        if(desZMage > 6.0f) desZMage = 6.0f;
         mageLookAt = 0.0f;
         break;
       case GLFW_KEY_UP:    
-        desZMage -= 0.2f;   
+        desZMage -= 0.2f;  
+        if(desZMage < -5.6f) desZMage = -5.6f; 
         mageLookAt = 180.0f;
         break;
       case GLFW_KEY_Z:     rotArmMage -= 5.0f; if(rotArmMage < -90.0f) rotArmMage = -90.0f; break;
