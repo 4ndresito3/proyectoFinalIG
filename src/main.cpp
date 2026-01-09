@@ -12,7 +12,7 @@ void configScene();
 void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
 void drawMatrix(glm::mat4 P, glm::mat4 V);
-void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control);
+void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control, bool inPlace);
 void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
 void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
 void drawAllCrystals(glm::mat4 P, glm::mat4 V);
@@ -72,7 +72,8 @@ void funTimer          (double seconds, double &t0);
   float autoXBook = 0.0;
   bool  autoXleft = true;
   float bookLookAt = 0.0;
-  bool showBook = false;
+  bool  showBook = false;
+  bool  bookPlaced = false; 
   float cameraMovX = 0.0;
   float cameraMovY = 0.0;
   float cameraMovZ = 0.0;
@@ -229,13 +230,18 @@ void renderScene() {
   if(showBook) {
     glm::mat4 Tfin = glm::translate(I, glm::vec3(-2.0, 2.3, -6.5));
     glm::mat4 Ry = glm::rotate   (I, glm::radians(bookLookAt), glm::vec3(0,1,0));
-    drawBook(P, V, Tfin * Ry, true);
+    drawBook(P, V, Tfin * Ry, true, false);
   }
-  glm::mat4 Tfin = glm::translate(I, glm::vec3(-4.0, autoYBook + 1.0, 4.0));
-  drawBook(P, V, Tfin, false);
+  if(bookPlaced) {
+    glm::mat4 Tfin = glm::translate(I, glm::vec3(-5.8, -1.0, 0.4));
+    glm::mat4 Ry = glm::rotate     (I, glm::radians(90.0f), glm::vec3(0,1,0));
+    drawBook(P, V, Tfin * Ry, false, true);
+  }
+  glm::mat4 Tfin = glm::translate(I, glm::vec3(3.0, autoYBook + 0.5, 3.0));
+  drawBook(P, V, Tfin, false, false);
   Tfin = glm::translate(I, glm::vec3(autoXBook + 3.0, autoYBook + 2.0, -2.0));
   glm::mat4 Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
-  drawBook(P, V, Tfin * Ry, false);
+  drawBook(P, V, Tfin * Ry, false, false);
 
   glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage));
   Ry = glm::rotate   (I, glm::radians(mageLookAt), glm::vec3(0,1,0));
@@ -295,33 +301,33 @@ void drawMatrix(glm::mat4 P, glm::mat4 V) {
       }
 }
 
-void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control) {
+void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control, bool inPlace) {
 
   glm::mat4 Dx = glm::translate(I, glm::vec3(control ? desX : 0.0f, 0.0f, 0.0f)); //Para mover el libro
   glm::mat4 Dy = glm::translate(I, glm::vec3(0.0f, control ? desY : 0.0f, 0.0f));
   glm::mat4 Dz = glm::translate(I, glm::vec3(0.0f, 0.0f, control ? desZ : 0.0f));
 
-  glm::mat4 Rz = glm::rotate   (I, glm::radians(rotZBook), glm::vec3(0,0,1)); //Portada del libro 1
+  glm::mat4 Rz = glm::rotate   (I, glm::radians(inPlace ? 0.0f : rotZBook), glm::vec3(0,0,1)); //Portada del libro 1
   glm::mat4 T1 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f)); //Para rotar en el extremo del libro
   glm::mat4 T2 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f));
   glm::mat4 S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
   drawObjectTex(cube, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * T2 * Rz * T1 * S);
 
-  Rz = glm::rotate   (I, glm::radians(rotZBook), glm::vec3(0,0,1)); //Paginas del libro 1
+  Rz = glm::rotate   (I, glm::radians(inPlace ? 0.0f : rotZBook), glm::vec3(0,0,1)); //Paginas del libro 1
   T1 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f)); //Para rotar en el extremo del libro
   T2 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f));
   S = glm::scale(I, glm::vec3(1.0/4, 0.15/5, 1.0/4));
   glm::mat4 Tp = glm::translate(I, glm::vec3(0.05f, 0.05f, 0.0f));
   drawObjectMat(cube, materialLoader.getPage(), P, V, Dz * Dy * Dx * M * Tp * T2 * Rz * T1 * S);
 
-  Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1)); //Portada del libro 2
+  Rz = glm::rotate   (I, glm::radians(inPlace ? 0.0f : -rotZBook), glm::vec3(0,0,1)); //Portada del libro 2
   T1 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f)); 
   T2 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f));
   glm::mat4 Tx = glm::translate(I, glm::vec3(0.75, 0.0, 0.0));
   S = glm::scale(I, glm::vec3(1.0/3, 0.15/3, 1.0/3));
   drawObjectTex(cube, textureLoader.getCover(), P, V, Dz * Dy * Dx * M * Tx * T2 * Rz * T1 * S);
 
-  Rz = glm::rotate   (I, glm::radians(-rotZBook), glm::vec3(0,0,1)); //Paginas del libro 2
+  Rz = glm::rotate   (I, glm::radians(inPlace ? 0.0f : -rotZBook), glm::vec3(0,0,1)); //Paginas del libro 2
   T1 = glm::translate(I, glm::vec3(0.35f, 0.0f, 0.0f)); 
   T2 = glm::translate(I, glm::vec3(-0.35f, 0.0f, 0.0f));
   Tx = glm::translate(I, glm::vec3(0.75, 0.0, 0.0));
@@ -504,12 +510,15 @@ void funFramebufferSize(GLFWwindow* window, int width, int height) {
 void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
   if (action == GLFW_RELEASE) return;
     switch(key) {
-      case GLFW_KEY_SPACE:  if (mods == GLFW_MOD_SHIFT) controlLight = !controlLight;
-                            else{
-                              showBook = true;
-                              controlBook = !controlBook;                              
-                              break;
-                            }
+      case GLFW_KEY_SPACE:  
+        if (mods == GLFW_MOD_SHIFT) controlLight = !controlLight;
+          else{
+            if(!bookPlaced){
+              showBook = true;
+              controlBook = !controlBook;
+            }
+          }
+        break;
       case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
       case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
       case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
@@ -528,6 +537,17 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
       // Control del sol (luz direccional)
       case GLFW_KEY_O:  sunAngle -= 5.0f;  break;
       case GLFW_KEY_P:  sunAngle += 5.0f;  break;
+      case GLFW_KEY_K:  
+          if(desX < -3.0f && desZ > 5.8f && desZ < 7.6f && desY < -2.5f && controlBook){
+            bookPlaced = true;
+            showBook = false;
+            controlBook = false;
+          }
+          else{
+            std::cout << "No se cumplen las condiciones para colocar el libro" 
+            << " " << desX << " " << desY << " " << desZ << std::endl;
+          }
+      break;
     }  
     if (controlBook){
       switch(key) {
