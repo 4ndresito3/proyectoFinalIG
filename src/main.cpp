@@ -247,9 +247,10 @@ void renderScene() {
   glm::mat4 Ry = glm::rotate(I, glm::radians(90.0f), glm::vec3(0,1,0));
   drawBook(P, V, Tfin * Ry, false, false);
 
-  glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.0f, desZMage)); //mago
+  glm::mat4 Mago = glm::translate(I, glm::vec3(desXMage, 0.66f, desZMage)); //mago
   Ry = glm::rotate   (I, glm::radians(mageLookAt), glm::vec3(0,1,0));
-  drawMago (P, V, Mago * Ry);
+  auto escaladoMago = glm::scale(I,glm::vec3(1.2));
+  drawMago (P, V, Mago * Ry * escaladoMago);
 
   Tfin = glm::translate(I, glm::vec3(-1.8, 0.0, -7.0)); //librerias
   drawBookshelf(P, V, Tfin);
