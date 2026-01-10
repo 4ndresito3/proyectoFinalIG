@@ -220,9 +220,9 @@ void renderScene() {
   }
   
   if (showBook) {
-    lightsManager.setFrontSpotlight(); // Luz focal frontal cuando se muestra el libro
+    lightsManager.setFrontSpotlight(); // Luz focal frontal cuando el libro que controlas aparece
   } else {
-    lightsManager.turnOffFrontSpotlight(); // Apagar la luz frontal cuando no se muestra el libro
+    lightsManager.turnOffFrontSpotlight();
   }
 
  // Fijamos las luces

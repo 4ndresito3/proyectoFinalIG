@@ -14,7 +14,7 @@ LightsManager::LightsManager() {
     lightD[0].diffuse   = glm::vec3( 0.7, 0.7, 0.7);
     lightD[0].specular  = glm::vec3( 0.7, 0.7, 0.7);
     // Luces posicionales
-    lightP[0].position    = glm::vec3(0.0, 3.0, 3.0);
+    lightP[0].position    = glm::vec3(0.0, 3.0, 0.0);
     lightP[0].ambient     = glm::vec3(0.2, 0.2, 0.2);
     lightP[0].diffuse     = glm::vec3(0.9, 0.9, 0.9);
     lightP[0].specular    = glm::vec3(0.9, 0.9, 0.9);
@@ -45,7 +45,7 @@ LightsManager::LightsManager() {
     lightF[1].c1          = 0.080;
     lightF[1].c2          = 0.032;
     // lightF[2] = Luz focal frontal para el libro (desactivada por defecto)
-    lightF[2].position    = glm::vec3( 0.0,  5.0,  5.0);
+    lightF[2].position    = glm::vec3( 0.0,  100.0,  0.0);
     lightF[2].direction   = glm::vec3( 0.0, -1.0, -1.0);
     lightF[2].ambient     = glm::vec3( 0.0,  0.0,  0.0);
     lightF[2].diffuse     = glm::vec3( 0.0,  0.0,  0.0);
@@ -129,6 +129,7 @@ void LightsManager::setFrontSpotlight() {
 
 void LightsManager::turnOffFrontSpotlight() {
     if (lightF.size() > 2) {
+        lightF[2].position   = glm::vec3(0.0, 100.0, 0.0);
         lightF[2].ambient    = glm::vec3(0.0, 0.0, 0.0);
         lightF[2].diffuse    = glm::vec3(0.0, 0.0, 0.0);
         lightF[2].specular   = glm::vec3(0.0, 0.0, 0.0);
