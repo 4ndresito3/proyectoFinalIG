@@ -214,6 +214,13 @@ void renderScene() {
   glm::vec3 sunDirection = glm::vec3(glm::cos(glm::radians(sunAngle)), -0.5f, glm::sin(glm::radians(sunAngle)));
   lightsManager.setLightDDirection(0, sunDirection);
 
+ // Si el hechizo ha sido lanzado, apagamos las luces direccionales y posicionales, y activamos una luz focal en el centro
+  if (hechizoLanzado) {
+    lightsManager.turnOffDirectionalLights();
+    lightsManager.turnOffPositionalLights();
+    lightsManager.setSpellLight(glm::vec3(0.0, 5.0, 0.0)); // Luz focal mirando hacia abajo desde (0, 5, 0)
+  }
+
  // Fijamos las luces
   setLights(P,V);
 

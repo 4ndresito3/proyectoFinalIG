@@ -31,5 +31,12 @@ public:
     
     // Cambia la dirección de la luz direccional (sol)
     void setLightDDirection(int index, const glm::vec3& direction);
+
+    // Apaga todas las luces direccionales y posicionales
+    void turnOffDirectionalLights();
+    void turnOffPositionalLights();
+
+    // Configura una luz focal en una posición específica mirando hacia abajo
+    void setSpellLight(const glm::vec3& position);
 };
 #endif /*LIGHTS_MANAGER_H*/

@@ -74,3 +74,37 @@ void LightsManager::setLightDDirection(int index, const glm::vec3& direction) {
         lightD[index].direction = glm::normalize(direction);
     }
 }
+
+void LightsManager::turnOffDirectionalLights() {
+    // Apaga todas las luces direccionales
+    for (auto& light : lightD) {
+        light.ambient  = glm::vec3(0.0, 0.0, 0.0);
+        light.diffuse  = glm::vec3(0.0, 0.0, 0.0);
+        light.specular = glm::vec3(0.0, 0.0, 0.0);
+    }
+}
+
+void LightsManager::turnOffPositionalLights() {
+    // Apaga todas las luces posicionales
+    for (auto& light : lightP) {
+        light.ambient  = glm::vec3(0.0, 0.0, 0.0);
+        light.diffuse  = glm::vec3(0.0, 0.0, 0.0);
+        light.specular = glm::vec3(0.0, 0.0, 0.0);
+    }
+}
+
+void LightsManager::setSpellLight(const glm::vec3& position) {
+    // Configura una luz focal que mira hacia abajo desde la posición dada
+    if (lightF.size() > 1) {
+        lightF[1].position   = position;
+        lightF[1].direction  = glm::vec3(0.0, -1.0, 0.0); // Mirando hacia abajo
+        lightF[1].ambient    = glm::vec3(0.3, 0.3, 0.3);
+        lightF[1].diffuse    = glm::vec3(1.0, 1.0, 1.0);
+        lightF[1].specular   = glm::vec3(1.0, 1.0, 1.0);
+        lightF[1].innerCutOff = 15.0;
+        lightF[1].outerCutOff = 25.0;
+        lightF[1].c0         = 1.000;
+        lightF[1].c1         = 0.070;
+        lightF[1].c2         = 0.017;
+    }
+}
