@@ -6,7 +6,7 @@ LightsManager::LightsManager() {
 
     lightD.resize(1);
     lightP.resize(1);
-    lightF.resize(2);
+    lightF.resize(3);
 
     // Luces direccionales
     lightD[0].direction = glm::vec3(-1.0, 0.0, 0.0);
@@ -35,20 +35,29 @@ LightsManager::LightsManager() {
     lightF[0].c2          = 0.032;
     // lightF[1] = Luz focal fija en la escena
     lightF[1].position    = glm::vec3( 4.0,  2.0,  7.0);
-    lightF[1].direction   = glm::vec3(-5.0, -1.5, -3.5);
-    lightF[1].ambient     = glm::vec3( 0.2,  0.2,  0.2);
-    lightF[1].diffuse     = glm::vec3( 1.2,  1.2,  1.2);
-    lightF[1].specular    = glm::vec3( 1.2,  1.2,  1.2);
+    lightF[1].direction   = glm::vec3(-5.0, -1.9, -3.5);
+    lightF[1].ambient     = glm::vec3( 1.0,  1.0,  1.0);
+    lightF[1].diffuse     = glm::vec3( 5.0,  5.0,  5.0);
+    lightF[1].specular    = glm::vec3( 5.0,  5.0,  5.0);
     lightF[1].innerCutOff = 5.0;
-    lightF[1].outerCutOff = lightF[1].innerCutOff + 3.0;
+    lightF[1].outerCutOff = lightF[1].innerCutOff + 4.0;
     lightF[1].c0          = 1.000;
-    lightF[1].c1          = 0.090;
+    lightF[1].c1          = 0.080;
     lightF[1].c2          = 0.032;
+    // lightF[2] = Luz focal frontal para el libro (desactivada por defecto)
+    lightF[2].position    = glm::vec3( 0.0,  5.0,  5.0);
+    lightF[2].direction   = glm::vec3( 0.0, -1.0, -1.0);
+    lightF[2].ambient     = glm::vec3( 0.0,  0.0,  0.0);
+    lightF[2].diffuse     = glm::vec3( 0.0,  0.0,  0.0);
+    lightF[2].specular    = glm::vec3( 0.0,  0.0,  0.0);
+    lightF[2].innerCutOff = 15.0;
+    lightF[2].outerCutOff = 25.0;
+    lightF[2].c0          = 1.000;
+    lightF[2].c1          = 0.050;
+    lightF[2].c2          = 0.020;
 }
 
-LightsManager::~LightsManager()
-{
-}
+LightsManager::~LightsManager(){}
 
 void LightsManager::addLightD(const Light& light) {
     lightD.push_back(light);
@@ -103,5 +112,25 @@ void LightsManager::setSpellLight(const glm::vec3& position) {
         lightF[1].c0         = 1.000;
         lightF[1].c1         = 0.020;
         lightF[1].c2         = 0.005;
+    }
+}
+
+void LightsManager::setFrontSpotlight() {
+    if (lightF.size() > 2) {
+        lightF[2].position   = glm::vec3(-1.6, 2.7, 0.0);
+        lightF[2].direction  = glm::vec3(0.0, 0.0, -1.0); 
+        lightF[2].ambient    = glm::vec3(0.5, 0.5, 0.5);
+        lightF[2].diffuse    = glm::vec3(1.5, 1.5, 1.5);
+        lightF[2].specular   = glm::vec3(1.0, 1.0, 1.0);
+        lightF[2].innerCutOff = 5.0;
+        lightF[2].outerCutOff = 10.0;
+    }
+}
+
+void LightsManager::turnOffFrontSpotlight() {
+    if (lightF.size() > 2) {
+        lightF[2].ambient    = glm::vec3(0.0, 0.0, 0.0);
+        lightF[2].diffuse    = glm::vec3(0.0, 0.0, 0.0);
+        lightF[2].specular   = glm::vec3(0.0, 0.0, 0.0);
     }
 }

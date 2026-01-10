@@ -38,5 +38,11 @@ public:
 
     // Configura una luz focal en una posición específica mirando hacia abajo
     void setSpellLight(const glm::vec3& position);
+
+    // Configura una luz focal frontal mirando al frente
+    void setFrontSpotlight();
+
+    // Apaga la luz focal frontal
+    void turnOffFrontSpotlight();
 };
 #endif /*LIGHTS_MANAGER_H*/

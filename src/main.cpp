@@ -218,6 +218,12 @@ void renderScene() {
     lightsManager.turnOffPositionalLights();
     lightsManager.setSpellLight(glm::vec3(0.0, 5.0, 10.0)); // Luz focal potente sobre la escena
   }
+  
+  if (showBook) {
+    lightsManager.setFrontSpotlight(); // Luz focal frontal cuando se muestra el libro
+  } else {
+    lightsManager.turnOffFrontSpotlight(); // Apagar la luz frontal cuando no se muestra el libro
+  }
 
  // Fijamos las luces
   setLights(P,V);
