@@ -11,7 +11,6 @@
 void configScene();
 void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
-void drawMatrix(glm::mat4 P, glm::mat4 V);
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control, bool inPlace);
 void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
 void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
@@ -214,18 +213,16 @@ void renderScene() {
   glm::vec3 sunDirection = glm::vec3(glm::cos(glm::radians(sunAngle)), -0.5f, glm::sin(glm::radians(sunAngle)));
   lightsManager.setLightDDirection(0, sunDirection);
 
- // Si el hechizo ha sido lanzado, apagamos las luces direccionales y posicionales, y activamos una luz focal en el centro
   if (hechizoLanzado) {
     lightsManager.turnOffDirectionalLights();
     lightsManager.turnOffPositionalLights();
-    lightsManager.setSpellLight(glm::vec3(0.0, 5.0, 0.0)); // Luz focal mirando hacia abajo desde (0, 5, 0)
+    lightsManager.setSpellLight(glm::vec3(0.0, 5.0, 10.0)); // Luz focal potente sobre la escena
   }
 
  // Fijamos las luces
   setLights(P,V);
 
  // Dibujamos la escena
-  //drawMatrix(P,V);
 
   glm::mat4 S = glm::scale    (I, glm::vec3(8.0, 2.0, 8.0)); //suelo
   glm::mat4 T = glm::translate(I, glm::vec3(0.0,-3.0, 0.0));
@@ -314,17 +311,6 @@ void setLights(glm::mat4 P, glm::mat4 V) {
     drawObjectMat(sphere, materialLoader.getMluz(), P, V, M);
   }
 
-}
-
-void drawMatrix(glm::mat4 P, glm::mat4 V) {
-
-  glm::mat4 S = glm::scale (I, glm::vec3(0.015, 0.015, 0.015));
-  for(int i = 0; i < 15; i++)
-    for(int j = 0; j < 7; j++)
-      for(int k = 0; k < 15; k++) {
-        glm::mat4 T = glm::translate(I, glm::vec3(i - 7.0f, j - 3.0f, k - 7.0f));
-        drawObjectMat(sphere, materialLoader.getGold(), P, V, T * S);
-      }
 }
 
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control, bool inPlace) {
@@ -732,12 +718,12 @@ void funTimer(double seconds, double &t0) {
     }
     if(hechizoLanzado){ //parpadeo de pantalla al lanzar hechizo
       outOfCameraTimer += 1; 
-      if(outOfCamera1 == 0.0f && outOfCameraTimer > 4){    
+      if(outOfCamera1 == 0.0f && outOfCameraTimer > 5){    
         outOfCamera1 = 100.f;
         outOfCamera2 = 0.0f;
         outOfCameraTimer = 0;
       } 
-      if(outOfCamera1 == 100.0f && outOfCameraTimer > 4){    
+      if(outOfCamera1 == 100.0f && outOfCameraTimer > 5){    
         outOfCamera1 = 0.0f;
         outOfCamera2 = 100.0f;
         outOfCameraTimer = 0;
