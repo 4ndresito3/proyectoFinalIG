@@ -1,6 +1,5 @@
-# Blender v2.90.1 OBJ File: 'Crystals_0001.blend'
+# Blender OBJ File
 # www.blender.org
-mtllib Crystals_low.mtl
 o Cylinder
 v -0.189677 0.086298 -0.183148
 v 0.004040 0.162991 -0.196802
@@ -1562,7 +1561,6 @@ vn -0.8832 -0.3912 -0.2586
 vn -0.6533 0.3692 0.6609
 vn 0.4098 -0.4771 0.7774
 vn -0.4162 -0.5763 0.7032
-usemtl None
 s 1
 f 158/1/1 159/2/2 162/3/3 161/4/4
 f 159/2/2 160/5/5 163/6/6 162/3/3
