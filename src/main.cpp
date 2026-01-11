@@ -735,8 +735,8 @@ void funTimer(double seconds, double &t0) {
         outOfCamera2 = 100.0f;
         outOfCameraTimer = 0;
       }
+      shakeCamera();
     }
-    shakeCamera();
     t0 = t1;
   }
 }
