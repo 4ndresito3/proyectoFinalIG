@@ -530,10 +530,12 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
   if (action == GLFW_RELEASE) return;
     switch(key) {
       case GLFW_KEY_SPACE:
-            showBook = true;
-            controlBook = !controlBook;
-            if (firstTime && !controlBook) firstTime = false;
-            break;
+        if(!bookPlaced){
+          showBook = true;
+          controlBook = !controlBook;
+          if (firstTime && !controlBook) firstTime = false;
+        }
+        break;
       case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
       case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
       case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
