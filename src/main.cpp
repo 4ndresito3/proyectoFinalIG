@@ -57,6 +57,7 @@ void funTimer          (double seconds, double &t0);
 // Animaciones
   bool controlBook = false;
   bool controlLight = false;
+  bool firstTime = true;
   float desX = 0.0; // desplazamiento libro
   float desY = 0.0;
   float desZ = 0.0;
@@ -219,7 +220,7 @@ void renderScene() {
     lightsManager.setSpellLight(glm::vec3(0.0, 5.0, 10.0)); // Luz focal potente sobre la escena
   }
   
-  if (showBook) {
+  if (showBook && controlBook && firstTime) {
     lightsManager.setFrontSpotlight(); // Luz focal frontal cuando el libro que controlas aparece
   } else {
     lightsManager.turnOffFrontSpotlight();
@@ -528,15 +529,11 @@ void funFramebufferSize(GLFWwindow* window, int width, int height) {
 void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
   if (action == GLFW_RELEASE) return;
     switch(key) {
-      case GLFW_KEY_SPACE:  
-        if (mods == GLFW_MOD_SHIFT) controlLight = !controlLight;
-        else{
-          if(!bookPlaced){
+      case GLFW_KEY_SPACE:
             showBook = true;
             controlBook = !controlBook;
-          }
-        }
-        break;
+            if (firstTime && !controlBook) firstTime = false;
+            break;
       case GLFW_KEY_A:  cameraMovX -= 0.2f;   break; 
       case GLFW_KEY_D:  cameraMovX += 0.2f;   break;
       case GLFW_KEY_S:  cameraMovZ += 0.2f;   break;
@@ -582,35 +579,35 @@ void funKey(GLFWwindow* window, int key  , int scancode, int action, int mods) {
     }  
     if (controlBook){
       switch(key) {
-      case GLFW_KEY_LEFT:  
-        desX -= 0.2f; 
-        if(desX < -4.5f) desX = -4.5f;
-        bookLookAt = 90.0f;
+        case GLFW_KEY_LEFT:  
+          desX -= 0.2f; 
+          if(desX < -4.5f) desX = -4.5f;
+          bookLookAt = 90.0f;
+          break;
+        case GLFW_KEY_RIGHT: 
+          desX += 0.2f;   
+          if(desX > 8.5f) desX = 8.5f;
+          bookLookAt = 90.0f;
+          break;
+        case GLFW_KEY_UP:     
+          desZ -= 0.2f;  
+          if(desZ < 0.0f) desZ = 0.0f;
+          bookLookAt = 0.0f; 
         break;
-      case GLFW_KEY_RIGHT: 
-        desX += 0.2f;   
-        if(desX > 8.5f) desX = 8.5f;
-        bookLookAt = 90.0f;
-        break;
-      case GLFW_KEY_UP:     
-        desZ -= 0.2f;  
-        if(desZ < 0.0f) desZ = 0.0f;
-        bookLookAt = 0.0f; 
-      break;
-      case GLFW_KEY_DOWN:   
-        desZ += 0.2f;  
-        if(desZ > 12.5f) desZ = 12.5f;
-        bookLookAt = 0.0f;   
-        break;    
-      case GLFW_KEY_X:  
-        desY -= 0.2f;  
-        if(desY < -4.0f) desY = -4.0f;
-        break;
-      case GLFW_KEY_Z:  
-        desY += 0.2f; 
-        if(desY > 2.0f) desY = 2.0f;  
-        break;
-      }
+        case GLFW_KEY_DOWN:   
+          desZ += 0.2f;  
+          if(desZ > 12.5f) desZ = 12.5f;
+          bookLookAt = 0.0f;   
+          break;    
+        case GLFW_KEY_X:  
+          desY -= 0.2f;  
+          if(desY < -4.0f) desY = -4.0f;
+          break;
+        case GLFW_KEY_Z:  
+          desY += 0.2f; 
+          if(desY > 2.0f) desY = 2.0f;  
+          break;
+        }
     }
     if (!controlBook){
       switch(key) {
