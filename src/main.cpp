@@ -11,6 +11,8 @@
 void configScene();
 void renderScene();
 void setLights (glm::mat4 P, glm::mat4 V);
+
+void shakeCamera();
 void drawBook(glm::mat4 P, glm::mat4 V, glm::mat4 M, bool control, bool inPlace);
 void drawCrystal1(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
 void drawCrystal2(glm::mat4 P, glm::mat4 V, glm::mat4 Tfin, glm::mat4 Ry, glm::mat4 Sfin);
@@ -74,19 +76,19 @@ void funTimer          (double seconds, double &t0);
   float bookLookAt = 0.0;
   bool  showBook = false; // dibujar libro que controlas
   bool  bookPlaced = false; 
-  float cameraMovX = 0.0;
-  float cameraMovY = 0.0;
-  float cameraMovZ = 0.0;
   bool  hechizoLanzado = false;
   float outOfCamera1 = 0.0; // "parpadeo" hechizo
   float outOfCamera2 = 0.0;
   int outOfCameraTimer = 0;
-
+  
   //Mejorar rotacion camara
   bool firstMouse = true;
   double lastX, lastY;
   float sensitivity = 0.1f;
-
+  float cameraMovX = 0.0;
+  float cameraMovY = 0.0;
+  float cameraMovZ = 0.0;
+  
 // Movimiento de camara
   float fovy   = 80.0;
   float alphaX =  0.0;
@@ -734,7 +736,22 @@ void funTimer(double seconds, double &t0) {
         outOfCameraTimer = 0;
       }
     }
+    shakeCamera();
     t0 = t1;
   }
 }
 
+void shakeCamera(){
+  if(hechizoLanzado){
+    cameraMovX = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
+    cameraMovY = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
+    cameraMovZ = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
+  }else{
+    cameraMovX = 0.0f;
+    cameraMovY = 0.0f;
+    cameraMovZ = 0.0f;
+    outOfCamera1 = 0.0f;
+    outOfCamera2 = 0.0f;
+    outOfCameraTimer = 0;
+  }
+}
