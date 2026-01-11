@@ -742,16 +742,7 @@ void funTimer(double seconds, double &t0) {
 }
 
 void shakeCamera(){
-  if(hechizoLanzado){
-    cameraMovX = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
-    cameraMovY = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
-    cameraMovZ = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
-  }else{
-    cameraMovX = 0.0f;
-    cameraMovY = 0.0f;
-    cameraMovZ = 0.0f;
-    outOfCamera1 = 0.0f;
-    outOfCamera2 = 0.0f;
-    outOfCameraTimer = 0;
-  }
+  cameraMovX = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
+  cameraMovY = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
+  cameraMovZ = (float) (rand()) / ((float) (RAND_MAX/0.5f)) - 0.25f;
 }
